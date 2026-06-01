@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - UD Marketplace</title>
+
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+    <div class="contenedor">
+
+        <div class="card">
+
+            <h1>UD Marketplace</h1>
+
+            <p class="subtitulo">
+                Completa tu información personal para continuar.
+            </p>
+
+            <form id="formRegistro">
+
+                <div class="fila">
+
+                    <div class="grupo">
+                        <label>Primer Nombre *</label>
+                        <input type="text" id="primerNombre">
+                        <small class="error"></small>
+                    </div>
+
+                    <div class="grupo">
+                        <label>Segundo Nombre</label>
+                        <input type="text" id="segundoNombre">
+                    </div>
+
+                </div>
+
+                <div class="fila">
+
+                    <div class="grupo">
+                        <label>Primer Apellido *</label>
+                        <input type="text" id="primerApellido">
+                        <small class="error"></small>
+                    </div>
+
+                    <div class="grupo">
+                        <label>Segundo Apellido</label>
+                        <input type="text" id="segundoApellido">
+                    </div>
+
+                </div>
+
+                <div class="grupo">
+                    <label>Fecha de Nacimiento *</label>
+                    <input type="date" id="fechaNacimiento">
+                    <small class="error"></small>
+                </div>
+
+                <div class="grupo">
+                    <label>Correo Institucional</label>
+                    <input
+                        type="email"
+                        id="correo"
+                        value="usuario@correo.udistrital.edu.co"
+                        readonly
+                    >
+                </div>
+
+                <div class="grupo">
+                    <label>Teléfono *</label>
+                    <input
+                        type="text"
+                        id="telefono"
+                        placeholder="3001234567"
+                    >
+                    <small class="error"></small>
+                </div>
+
+                <button type="submit">
+                    Completar Registro
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <script src="js/registro.js"></script>
+
+</body>
+</html>

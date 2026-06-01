@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar producto</title>
+    <link rel="stylesheet" href="./src/css/estilos.css">
+</head>
+<body>
+
+    <div class="contenedor">
+
+        <!-- PANEL IZQUIERDO -->
+        <div class="panel-izquierdo">
+
+            <div class="logo">
+                🎓 UD Marketplace
+            </div>
+
+            <img src="img/registro.png"
+                 alt="Registro"
+                 class="imagen">
+
+            <h2>Únete a nuestra comunidad</h2>
+
+            <p>
+                Compra y vende dentro de la comunidad
+                universitaria de la Universidad Distrital.
+            </p>
+
+        </div>
+
+        <!-- PANEL DERECHO -->
+        <div class="panel-derecho">
+
+            <h1>Completa tu información</h1>
+
+            <form id="formRegistroProductos">
+
+                <div class="fila">
+
+                    <div class="grupo">
+                        <label>Nombre del producto</label>
+                        <input type="text" id="nombreProducto">
+                        <small class="error"></small>
+                    </div>
+
+                    <div class="grupo">
+                        <label>Descripcion del producto</label>
+                        <textarea id="descripcion"></textarea>
+                        <small class="error"></small>
+                    </div>
+
+                </div>
+
+                <div class="fila">
+
+                    <div class="grupo">
+                        <label>Ubicacion de venta del producto</label>
+                        <input type="text" id="ubicacion">
+                        <small class="error"></small>
+                    </div>
+
+                    <div class="grupo">
+                        <label>Precio</label>
+                        <input type="text" id="precio">
+                        <small class="error"></small>
+                    </div>
+
+                </div>
+
+                <div class="grupo">
+                    <label>Categoria</label>
+                    <select id="categoria"></select>
+                    <small class="error"></small>
+                </div>
+
+                <div class="grupo">
+                    <label>Imagen</label>
+                    <input type="file" id="imagen" onchange="validarImagen(this)">
+                    <small class="error"></small>
+                </div>
+                
+                <button type="submit" id="btnRegistrar">
+                    Completar Registro →
+                </button>
+
+                <button type="button" id="btnRegresar">
+                    Regresar
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+<script src="./src/js/registroProductos.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,178 @@
+{
+  "usuarios": [
+    {
+      "id": "1",
+      "primerNombre": "Juan",
+      "segundoNombre": "Carlos",
+      "primerApellido": "Pérez",
+      "segundoApellido": "Gómez",
+      "fechaNacimiento": "2000-05-15",
+      "correoInstitucional": "juan.perez@udistrital.edu.co",
+      "telefono": "3001234567",
+      "contrasena": "juan123"
+    },
+    {
+      "id": "2",
+      "primerNombre": "María",
+      "segundoNombre": "Fernanda",
+      "primerApellido": "Rodríguez",
+      "segundoApellido": "López",
+      "fechaNacimiento": "1999-08-21",
+      "correoInstitucional": "maria.rodriguez@udistrital.edu.co",
+      "telefono": "3109876543",
+      "contrasena": "maria123"
+    },
+    {
+      "id": "3",
+      "primerNombre": "Andrés",
+      "segundoNombre": "Felipe",
+      "primerApellido": "Martínez",
+      "segundoApellido": "Castro",
+      "fechaNacimiento": "2001-02-10",
+      "correoInstitucional": "andres.martinez@udistrital.edu.co",
+      "telefono": "3204567890",
+      "contrasena": "andres123"
+    },
+    {
+      "id": "4",
+      "primerNombre": "Laura",
+      "segundoNombre": "Sofía",
+      "primerApellido": "Ramírez",
+      "segundoApellido": "Torres",
+      "fechaNacimiento": "2002-11-30",
+      "correoInstitucional": "laura.ramirez@udistrital.edu.co",
+      "telefono": "3157891234",
+      "contrasena": "laura123"
+    },
+    {
+      "id": "5",
+      "primerNombre": "Camilo",
+      "segundoNombre": "Alejandro",
+      "primerApellido": "Herrera",
+      "segundoApellido": "Morales",
+      "fechaNacimiento": "1998-07-12",
+      "correoInstitucional": "camilo.herrera@udistrital.edu.co",
+      "telefono": "3016549873",
+      "contrasena": "camilo123"
+    },
+    {
+      "primerNombre": "Juan",
+      "segundoNombre": "Jose",
+      "primerApellido": "Torres",
+      "segundoApellido": "",
+      "fechaNacimiento": "1990-04-12",
+      "correo": "jt@udistrital.edu.co",
+      "telefono": "3312345678",
+      "contrasena": "123456789",
+      "id": "UdfRE4wWITY"
+    },
+    {
+      "primerNombre": "Valentina",
+      "segundoNombre": "",
+      "primerApellido": "Lopez",
+      "segundoApellido": "",
+      "fechaNacimiento": "2000-07-12",
+      "correo": "vl@udistrital.edu.co",
+      "telefono": "1234565432",
+      "contrasena": "987654321",
+      "id": "WnU9BQMddnw"
+    }
+  ],
+  "categorias": [
+    {
+      "id": "1",
+      "nombre": "Tecnología"
+    },
+    {
+      "id": "2",
+      "nombre": "Libros"
+    },
+    {
+      "id": "3",
+      "nombre": "Ropa"
+    },
+    {
+      "id": "4",
+      "nombre": "Hogar"
+    },
+    {
+      "id": "5",
+      "nombre": "Deportes"
+    }
+  ],
+  "productos": [
+    {
+      "id": "1",
+      "nombreProducto": "Portátil Lenovo IdeaPad",
+      "descripcionProducto": "Portátil Lenovo IdeaPad con 16GB RAM y SSD de 512GB.",
+      "ubicacionVenta": "Bogotá",
+      "precio": 2500000,
+      "categoriaId": "1",
+      "imagen": "https://picsum.photos/id/180/400/300"
+    },
+    {
+      "id": "2",
+      "nombreProducto": "Programación en Java",
+      "descripcionProducto": "Libro para aprender programación orientada a objetos en Java.",
+      "ubicacionVenta": "Medellín",
+      "precio": 85000,
+      "categoriaId": "2",
+      "imagen": "https://picsum.photos/id/24/400/300"
+    },
+    {
+      "id": "3",
+      "nombreProducto": "Chaqueta Universitaria",
+      "descripcionProducto": "Chaqueta deportiva unisex talla M.",
+      "ubicacionVenta": "Cali",
+      "precio": 120000,
+      "categoriaId": "3",
+      "imagen": "https://picsum.photos/id/1005/400/300"
+    },
+    {
+      "id": "4",
+      "nombreProducto": "Silla Ergonómica",
+      "descripcionProducto": "Silla ergonómica para estudio o trabajo remoto.",
+      "ubicacionVenta": "Bogotá",
+      "precio": 450000,
+      "categoriaId": "4",
+      "imagen": "https://picsum.photos/id/1060/400/300"
+    },
+    {
+      "id": "5",
+      "nombreProducto": "Balón de Fútbol",
+      "descripcionProducto": "Balón profesional tamaño 5.",
+      "ubicacionVenta": "Barranquilla",
+      "precio": 90000,
+      "categoriaId": "5",
+      "imagen": "https://picsum.photos/id/292/400/300"
+    },
+    {
+      "id": "6",
+      "nombreProducto": "Monitor Samsung 24",
+      "descripcionProducto": "Monitor Full HD de 24 pulgadas.",
+      "ubicacionVenta": "Bogotá",
+      "precio": 650000,
+      "categoriaId": "1",
+      "imagen": "https://picsum.photos/id/48/400/300"
+    },
+    {
+      "id": "7",
+      "nombreProducto": "Libro de Cálculo Diferencial",
+      "descripcionProducto": "Texto universitario para estudiantes de ingeniería.",
+      "ubicacionVenta": "Tunja",
+      "precio": 70000,
+      "categoriaId": "2",
+      "imagen": "https://picsum.photos/id/20/400/300"
+    },
+    {
+      "id": "8",
+      "nombreProducto": "Guantes Deportivos",
+      "descripcionProducto": "Guantes para gimnasio con ajuste de velcro.",
+      "ubicacionVenta": "Bucaramanga",
+      "precio": 45000,
+      "categoriaId": "5",
+      "imagen": "https://picsum.photos/id/431/400/300"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

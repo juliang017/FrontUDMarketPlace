@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - UD Marketplace</title>
+
+    <link rel="stylesheet" href="css/login.css">
+</head>
+
+<body>
+
+    <div class="contenedor">
+
+        <!-- PANEL IZQUIERDO -->
+        <div class="panel-izquierdo">
+
+            <img
+                src="img/marketplace.png"
+                alt="Marketplace Universitario"
+                class="imagen">
+
+            <h2>Bienvenido a UD Marketplace</h2>
+
+            <p>
+                Compra, vende y conecta con la comunidad
+                universitaria de la Universidad Distrital.
+            </p>
+
+        </div>
+
+        <!-- PANEL DERECHO -->
+        <div class="panel-derecho">
+
+            <h1>Iniciar Sesión</h1>
+
+            <p class="subtitulo">
+                Ingresa tu correo institucional para continuar.
+            </p>
+
+            <form id="formLogin">
+
+                <div class="grupo">
+                    <label>Correo Institucional *</label>
+
+                    <input
+                        type="email"
+                        id="correo"
+                        placeholder="usuario@udistrital.edu.co">
+
+                    <small class="error"></small>
+                </div>
+
+                <button type="submit">
+                    🔐 Continuar
+                </button>
+
+            </form>
+
+            <p class="registro">
+                ¿No tienes perfil?
+                <a href="registro.html">
+                    Completa tu registro
+                </a>
+            </p>
+
+        </div>
+
+    </div>
+
+    <script src="js/login.js"></script>
+
+</body>
+
+</html>

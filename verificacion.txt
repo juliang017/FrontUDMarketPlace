@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Verificación</title>
+
+    <link rel="stylesheet"
+          href="css/verificacion.css">
+</head>
+
+<body>
+
+    <div class="card">
+
+        <h1>Verificación</h1>
+
+        <p id="mensajeCorreo"></p>
+
+        <div class="codigo">
+
+            <input maxlength="1" class="otp">
+            <input maxlength="1" class="otp">
+            <input maxlength="1" class="otp">
+            <input maxlength="1" class="otp">
+            <input maxlength="1" class="otp">
+            <input maxlength="1" class="otp">
+
+        </div>
+
+        <button id="btnVerificar">
+
+            Verificar Código
+
+        </button>
+
+        <a href="#">
+
+            Reenviar código
+
+        </a>
+
+    </div>
+
+    <script src="js/verificacion.js"></script>
+
+</body>
+
+</html>
