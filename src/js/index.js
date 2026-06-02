@@ -1,13 +1,17 @@
-// =============================================
-// UTILIDAD JWT
-// =============================================
+const MODO_PRUEBA = true;
 
-function parseJWT(token) {
-  try {
-    return JSON.parse(atob(token.split(".")[1]));
-  } catch {
-    return null;
-  }
+if(MODO_PRUEBA){
+
+    localStorage.setItem(
+        "usuarioLogueado",
+        "true"
+    );
+
+    localStorage.setItem(
+        "correoUsuario",
+        "kevin.neisa@udistrital.edu.co"
+    );
+
 }
 
 function tokenEsValido(token) {
@@ -72,19 +76,44 @@ if (usuarioLogueado) {
   });
 }
 
-// =============================================
-// DATOS Y ESTADO DEL FILTRO
-// =============================================
+const productos = [
 
-let todosLosProductos = [];
-let todasLasSedes     = [];
-let categoriaActiva   = "todas";
+    {
+        nombre:"Hamburguesa Artesanal",
 
-// =============================================
-// CARGA INICIAL — productos, sedes y categorías
-// =============================================
+        descripcion:
+        "Hamburguesa con queso y papas.",
 
-const contenedor = document.getElementById("contenedorProductos");
+        precio:12000,
+
+        ubicacion:
+        "Facultad Tecnológica",
+
+        imagen:
+        "img/hamburguesa.jpg"
+    },
+
+    {
+        nombre:"Cuaderno",
+
+        descripcion:
+        "Cuaderno universitario.",
+
+        precio:5000,
+
+        ubicacion:
+        "Sede Ingeniería",
+
+        imagen:
+        "img/cuaderno.jpg"
+    }
+
+];
+
+const contenedor =
+document.getElementById(
+    "contenedorProductos"
+);
 
 async function inicializar() {
   try {
@@ -189,6 +218,8 @@ function renderizarProductos(productos) {
   });
 }
 
+function cerrarSesion(){
+
 // =============================================
 // FUNCIONES GLOBALES DEL ADMINISTRADOR PARA EL INDEX
 // =============================================
@@ -220,14 +251,7 @@ window.editarPrecioDesdeIndex = async function(id) {
 // CERRAR SESIÓN
 // =============================================
 
-function cerrarSesion() {
-  localStorage.removeItem("jwt");
-  localStorage.clear();
-  window.location.href = "index.html";
+    localStorage.removeItem("correoUsuario");
+
+    window.location.href = "index.html";
 }
-
-// =============================================
-// ARRANQUE
-// =============================================
-
-inicializar();
