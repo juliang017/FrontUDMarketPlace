@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "backend": "json-server db.json --port 3000",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
-    "typescript": "~6.0.2",
     "vite": "^8.0.12"
   },
   "dependencies": {
