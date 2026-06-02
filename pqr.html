@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PQR</title>
+
+    <link rel="stylesheet" href="./src/css/pqr.css">
+</head>
+<body>
+
+    <div class="contenedor">
+
+        <h1>Peticiones, Quejas y Reclamos</h1>
+
+        <form id="formPQR">
+
+            <div class="grupo">
+
+                <label>Tipo</label>
+
+                <select id="tipo">
+                    <option value="">Seleccione</option>
+                    <option>Petición</option>
+                    <option>Queja</option>
+                    <option>Reclamo</option>
+                </select>
+
+            </div>
+
+            <div class="grupo">
+
+                <label>Asunto</label>
+
+                <input type="text" id="asunto">
+
+            </div>
+
+            <div class="grupo">
+
+                <label>Descripción</label>
+
+                <textarea id="descripcion"></textarea>
+
+            </div>
+
+            <button type="submit">
+
+                Enviar PQR
+
+            </button>
+
+        </form>
+
+    </div>
+
+    <script src="./src/js/pqr.js"></script>
+
+</body>
+</html>
