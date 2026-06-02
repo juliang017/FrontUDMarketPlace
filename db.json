@@ -9,7 +9,7 @@
       "fechaNacimiento": "2000-05-15",
       "correoInstitucional": "juan.perez@udistrital.edu.co",
       "telefono": "3001234567",
-      "contrasena": "juan123"
+      "contrasena": "juan123456"
     },
     {
       "id": "2",
@@ -94,37 +94,10 @@
   ],
   "productos": [
     {
-      "id": "1",
-      "nombreProducto": "Portátil Lenovo IdeaPad",
-      "descripcionProducto": "Portátil Lenovo IdeaPad con 16GB RAM y SSD de 512GB.",
-      "precio": 2500000,
-      "categoriaId": "1",
-      "sedeId": "1",
-      "imagen": "https://picsum.photos/id/180/400/300"
-    },
-    {
-      "id": "2",
-      "nombreProducto": "Programación en Java",
-      "descripcionProducto": "Libro para aprender programación orientada a objetos en Java.",
-      "precio": 85000,
-      "categoriaId": "2",
-      "sedeId": "2",
-      "imagen": "https://picsum.photos/id/24/400/300"
-    },
-    {
-      "id": "3",
-      "nombreProducto": "Chaqueta Universitaria",
-      "descripcionProducto": "Chaqueta deportiva unisex talla M.",
-      "precio": 120000,
-      "categoriaId": "3",
-      "sedeId": "3",
-      "imagen": "https://picsum.photos/id/1005/400/300"
-    },
-    {
       "id": "4",
       "nombreProducto": "Silla Ergonómica",
       "descripcionProducto": "Silla ergonómica para estudio o trabajo remoto.",
-      "precio": 450000,
+      "precio": 400000,
       "categoriaId": "4",
       "sedeId": "1",
       "imagen": "https://picsum.photos/id/1060/400/300"
@@ -137,15 +110,6 @@
       "categoriaId": "5",
       "sedeId": "2",
       "imagen": "https://picsum.photos/id/292/400/300"
-    },
-    {
-      "id": "6",
-      "nombreProducto": "Monitor Samsung 24",
-      "descripcionProducto": "Monitor Full HD de 24 pulgadas.",
-      "precio": 650000,
-      "categoriaId": "1",
-      "sedeId": "3",
-      "imagen": "https://picsum.photos/id/48/400/300"
     },
     {
       "id": "7",
@@ -164,6 +128,17 @@
       "categoriaId": "5",
       "sedeId": "2",
       "imagen": "https://picsum.photos/id/431/400/300"
+    }
+  ],
+  "pqrs": [
+    {
+      "id": "1",
+      "usuarioId": "1",
+      "tipo": "Queja",
+      "asunto": "Producto no entregado",
+      "mensaje": "Compré un cuaderno y el vendedor no apareció en la sede.",
+      "estado": "Rechazado",
+      "respuestaAdmin": "sapo"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

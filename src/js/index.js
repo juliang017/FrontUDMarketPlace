@@ -22,22 +22,39 @@ function tokenEsValido(token) {
 }
 
 // =============================================
-// BOTONES SEGÚN ESTADO DE SESIÓN
+// BOTONES SEGÚN ESTADO DE SESIÓN Y ROL
 // =============================================
 
 const acciones = document.getElementById("accionesUsuario");
 const jwt = localStorage.getItem("jwt");
 const usuarioLogueado = tokenEsValido(jwt);
+const rolUsuario = localStorage.getItem('userRole'); // Recuperamos el rol
 
 if (usuarioLogueado) {
+  // Si es admin, agregamos el botón del Panel; si no, cadena vacía
+  const btnPanelAdmin = rolUsuario === 'ADMINISTRADOR' 
+    ? `<a href="admin.html" id="btnAdminIndex" style="background: #1e3a8a; color: white; padding: 5px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; margin-right: 10px;">Panel Admin</a>` 
+    : '';
+    
+  // Si es administrador, NO mostramos el botón de vender
+  const btnVender = rolUsuario !== 'ADMINISTRADOR'
+    ? `<button type="button" id="btnVender">Vender Producto</button>`
+    : '';
+
   acciones.innerHTML = `
-    <button type="button" id="btnVender">Vender Producto</button>
+    ${btnPanelAdmin}
+    ${btnVender}
     <button type="button" id="btnPerfil">Mi Perfil</button>
     <button type="button" id="btnCerrarSesion">Cerrar Sesión</button>
   `;
-  document.getElementById("btnVender").addEventListener("click", () => {
-    window.location.href = "venderProductos.html";
-  });
+  
+  // Solo le agregamos el evento al botón de vender si este existe (si no es admin)
+  if (document.getElementById("btnVender")) {
+      document.getElementById("btnVender").addEventListener("click", () => {
+        window.location.href = "venderProductos.html";
+      });
+  }
+
   document.getElementById("btnPerfil").addEventListener("click", () => {
     window.location.href = "perfil.html";
   });
@@ -103,7 +120,6 @@ function construirFiltros(categorias) {
   const filtrosContainer = document.getElementById("filtrosCategorias");
   if (!filtrosContainer) return;
 
-  // Botón "Todas"
   filtrosContainer.innerHTML = `
     <button class="btn-filtro activo" data-id="todas">Todas</button>
     ${categorias.map(cat => `
@@ -113,7 +129,6 @@ function construirFiltros(categorias) {
 
   filtrosContainer.querySelectorAll(".btn-filtro").forEach((btn) => {
     btn.addEventListener("click", () => {
-      // Actualiza botón activo
       filtrosContainer
         .querySelectorAll(".btn-filtro")
         .forEach((b) => b.classList.remove("activo"));
@@ -132,7 +147,7 @@ function construirFiltros(categorias) {
 }
 
 // =============================================
-// RENDER DE PRODUCTOS
+// RENDER DE PRODUCTOS (CON BOTONES DE ADMIN)
 // =============================================
 
 function renderizarProductos(productos) {
@@ -143,12 +158,21 @@ function renderizarProductos(productos) {
     return;
   }
 
+  // Recorremos los productos
   productos.forEach((producto) => {
     const sede = todasLasSedes.find((s) => s.id === producto.sedeId);
     const nombreSede = sede ? sede.nombre : "Sede no especificada";
 
+    // Si el usuario es administrador, preparamos sus botones; si no, queda vacío
+    const controlesAdmin = rolUsuario === 'ADMINISTRADOR' ? `
+        <div style="margin-top: 10px; display: flex; gap: 5px; width: 100%;">
+            <button onclick="editarPrecioDesdeIndex('${producto.id}')" style="background:#f59e0b; color:white; border:none; padding:8px; border-radius:4px; cursor:pointer; flex:1;">Editar</button>
+            <button onclick="eliminarProductoDesdeIndex('${producto.id}')" style="background:#ef4444; color:white; border:none; padding:8px; border-radius:4px; cursor:pointer; flex:1;">Borrar</button>
+        </div>
+    ` : '';
+
     contenedor.innerHTML += `
-      <div class="card">
+      <div class="card" data-id="${producto.id}">
         <img
           src="${producto.imagen}"
           alt="${producto.nombreProducto}"
@@ -159,10 +183,37 @@ function renderizarProductos(productos) {
           <p>${producto.descripcionProducto}</p>
           <h4>$${producto.precio.toLocaleString("es-CO")}</h4>
           <span>📍 ${nombreSede}</span>
-        </div>
+          ${controlesAdmin} </div>
       </div>
     `;
   });
+}
+
+// =============================================
+// FUNCIONES GLOBALES DEL ADMINISTRADOR PARA EL INDEX
+// =============================================
+
+window.eliminarProductoDesdeIndex = async function(id) {
+    if (confirm("Modo Admin: ¿Eliminar este producto permanentemente de la tienda?")) {
+        await fetch(`http://localhost:3000/productos/${id}`, { method: 'DELETE' });
+        location.reload(); 
+    }
+}
+
+window.editarPrecioDesdeIndex = async function(id) {
+    // Validado estrictamente para que solo entren valores numéricos
+    let nuevoPrecio = prompt("Ingrese los valores en pesos colombianos, directamente un valor no especificar nada más:");
+    
+    if (nuevoPrecio && /^\d+$/.test(nuevoPrecio.trim())) {
+        await fetch(`http://localhost:3000/productos/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ precio: parseInt(nuevoPrecio.trim()) })
+        });
+        location.reload(); 
+    } else if(nuevoPrecio) {
+        alert("Error: Entrada inválida. Debe escribir directamente el valor numérico.");
+    }
 }
 
 // =============================================

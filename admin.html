@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,19 +8,20 @@
     <title>Panel Administrativo</title>
     <link rel="stylesheet" href="./src/css/venderProductos.css">
 </head>
+
 <body>
     <header>
         <div class="logo">
             🎓 UD Marketplace - Administrador
         </div>
         <div class="busqueda">
-            </div>
-        <div id="accionesUsuario">
+        </div>
+        <div id="accionesUsuario" style="display: flex; align-items: center; gap: 15px;">
+            <a href="index.html" style="background: #2563eb; color: white; padding: 8px 12px; border-radius: 5px; text-decoration: none; font-weight: bold; margin-right: 15px;">Ir al Inicio</a>
             <button type="button" id="adminName" style="background: none; border: none; cursor: default; font-weight: bold;">
                 Cargando perfil...
             </button>
-            
-            <button id="btnCerrarSesion">
+            <button id="btnCerrarSesion" style="background: #ef4444; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;">
                 Cerrar sesión
             </button>
         </div>
@@ -31,33 +33,49 @@
                 <h2>Vista General del Sistema</h2>
                 <p>Panel Administrativo Exclusivo</p>
             </div>
-        </div>    
+        </div>
 
         <section class="productos" style="display: flex; flex-direction: column; gap: 20px; padding: 20px;">
-            
-            <div class="card" style="width: 100%; padding: 20px; box-sizing: border-box; display: block;">
-                <h3 style="margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Estado del Sistema</h3>
-                <div id="dashboardContent">
-                    <p>Consultando al servidor...</p>
-                </div>
-            </div>
 
             <div class="card" style="width: 100%; padding: 20px; box-sizing: border-box; display: block;">
-                <h3 style="margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Información de Sedes (Grupo 2)</h3>
-                <p style="margin-bottom: 15px;">Consulta la lista de sedes registradas en el sistema.</p>
-                
-                <button id="btnLoadReports" style="background-color: #2563eb; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">
-                    Cargar Sedes
-                </button>
-                
-                <div style="margin-top: 15px; background-color: #1e293b; color: #f8fafc; padding: 15px; border-radius: 5px; overflow-x: auto;">
-                    <pre id="reportData" style="margin: 0; font-family: monospace;">Esperando solicitud...</pre>
+                <h3 style="margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Estado del Sistema</h3>
+                <div id="dashboardContent"><p>Consultando al servidor...</p></div>
+            </div>
+
+            <div class="card" style="width: 100%; padding: 20px; box-sizing: border-box; margin-top: 20px;">
+                <h3 style="border-bottom: 1px solid #eee; padding-bottom: 10px;">Gestión de Productos (Global)</h3>
+                <input type="text" id="filtroProductos" placeholder="🔍 Filtrar por nombre o ID del producto..." style="width: 100%; padding: 10px; margin-top: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
+                <div id="adminProductosLista" style="display: grid; gap: 15px; margin-top: 15px;"></div>
+            </div>
+
+            <div class="card" style="width: 100%; padding: 20px; box-sizing: border-box; margin-top: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                    <h3 style="margin: 0;">Gestión de Categorías</h3>
+                    <button onclick="crearCategoria()" style="background: #10b981; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">+ Agregar Categoría</button>
                 </div>
+                <div id="adminCategoriasLista" style="display: grid; gap: 10px; margin-top: 15px;"></div>
+            </div>
+
+            <div class="card" style="width: 100%; padding: 20px; box-sizing: border-box; margin-top: 20px;">
+                <h3 style="border-bottom: 1px solid #eee; padding-bottom: 10px;">Gestión de Usuarios Registrados</h3>
+                <div id="adminUsuariosLista" style="display: grid; gap: 15px; margin-top: 15px;"></div>
+            </div>
+
+            <div class="card" style="width: 100%; padding: 20px; box-sizing: border-box; margin-top: 20px;">
+                <h3 style="border-bottom: 1px solid #eee; padding-bottom: 10px;">Bandeja Avanzada de PQRS</h3>
+                <div id="adminPQRSLista" style="display: grid; gap: 15px; margin-top: 15px;"></div>
+            </div>
+
+            <div class="card" style="width: 100%; padding: 20px; box-sizing: border-box; display: block; margin-top: 20px;">
+                <h3 style="margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Gestión de Sedes (Grupo 2)</h3>
+                <p style="margin-bottom: 15px;">Administra y edita la información de las sedes (Nombre, Dirección, Coordenadas).</p>
+                <div id="adminSedesLista" style="display: grid; gap: 15px; margin-top: 15px;"></div>
             </div>
 
         </section>
     </main>
-    
-    <script src="js/admin.js"></script>
+
+    <script type="module" src="./src/js/admin.js"></script>
 </body>
+
 </html>
