@@ -32,6 +32,10 @@ header{
 
     z-index:100;
 }
+.btn-filtro.activo {
+  background-color: #f97316; /* ajusta a tu paleta */
+  color: white;
+}
 
 .logo{
 
@@ -122,6 +126,9 @@ button{
     repeat(auto-fill,minmax(280px,1fr));
 
     gap:25px;
+}
+#filtrosCategorias{
+    margin-bottom: 20px;
 }
 .card{
 
