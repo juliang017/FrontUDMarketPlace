@@ -141,5 +141,7 @@
       "respuestaAdmin": "sapo"
     }
   ],
+    "calificaciones": [
+  ],
   "$schema": "./node_modules/json-server/schema.json"
 }
