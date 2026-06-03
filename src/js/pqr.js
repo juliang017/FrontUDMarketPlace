@@ -1,8 +1,20 @@
 const API = "http://localhost:3000/pqrs";
 
+const productoId =
+localStorage.getItem("productoSeleccionado");
+
+if (!productoId) {
+
+    alert(
+        "No se ha seleccionado ningún producto."
+    );
+
+    window.location.href = "index.html";
+}
+
 document
 .getElementById("formPQR")
-.addEventListener("submit", async (e)=>{
+.addEventListener("submit", async (e) => {
 
     e.preventDefault();
 
@@ -15,7 +27,7 @@ document
     const mensaje =
     document.getElementById("descripcion").value;
 
-    if(!tipo || !asunto || !mensaje){
+    if (!tipo || !asunto || !mensaje) {
 
         alert("Complete todos los campos");
         return;
@@ -24,6 +36,8 @@ document
     const nuevaPQR = {
 
         usuarioId: "1",
+
+        productoId,
 
         tipo,
 
@@ -34,23 +48,40 @@ document
         estado: "Pendiente",
 
         respuestaAdmin: ""
-
     };
 
-    await fetch(API,{
+    try {
 
-        method:"POST",
+        const respuesta = await fetch(API, {
 
-        headers:{
-            "Content-Type":"application/json"
-        },
+            method: "POST",
 
-        body: JSON.stringify(nuevaPQR)
-    });
+            headers: {
+                "Content-Type": "application/json"
+            },
 
-    alert("PQR enviada correctamente");
+            body: JSON.stringify(nuevaPQR)
+        });
 
-    document
-    .getElementById("formPQR")
-    .reset();
+        if (!respuesta.ok) {
+
+            throw new Error(
+                "Error al guardar la PQR"
+            );
+        }
+
+        alert("PQR enviada correctamente");
+
+        document
+        .getElementById("formPQR")
+        .reset();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "No fue posible enviar la PQR"
+        );
+    }
 });
