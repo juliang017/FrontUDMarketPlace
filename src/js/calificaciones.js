@@ -1,6 +1,54 @@
 console.log("calificaciones.js cargado");
 
-const API = "http://localhost:3000/calificaciones";
+const API =
+"http://localhost:3000/calificaciones";
+
+const productoId =
+localStorage.getItem("productoSeleccionado");
+
+async function cargarProducto() {
+
+    try {
+
+        const respuesta =
+        await fetch(
+            `http://localhost:3000/productos/${productoId}`
+        );
+
+        if(!respuesta.ok){
+
+            throw new Error(
+                "Producto no encontrado"
+            );
+        }
+
+        const producto =
+        await respuesta.json();
+
+        document
+        .getElementById("nombreProducto")
+        .textContent =
+        producto.nombreProducto;
+
+    } catch(error){
+
+        console.error(error);
+
+        document
+        .getElementById("nombreProducto")
+        .textContent =
+        "Producto no disponible";
+    }
+}
+
+if (!productoId) {
+
+    alert(
+        "No se ha seleccionado ningún producto."
+    );
+
+    window.location.href = "index.html";
+}
 
 let puntuacion = 0;
 
@@ -47,7 +95,7 @@ document
 
         usuarioId: "1",
 
-        vendedorId: "1",
+        productoId,
 
         puntuacion,
 
@@ -58,7 +106,8 @@ document
 
     try {
 
-        const respuesta = await fetch(API, {
+        const respuesta =
+        await fetch(API, {
 
             method: "POST",
 
@@ -66,7 +115,9 @@ document
                 "Content-Type": "application/json"
             },
 
-            body: JSON.stringify(nuevaCalificacion)
+            body: JSON.stringify(
+                nuevaCalificacion
+            )
         });
 
         if (!respuesta.ok) {
@@ -76,18 +127,19 @@ document
             );
         }
 
-        alert("Calificación guardada correctamente");
+        alert(
+            "Calificación guardada correctamente"
+        );
 
-        // Limpiar comentario
+        await cargarCalificaciones();
+
         document
         .getElementById("comentario")
         .value = "";
 
-        // Reiniciar estrellas
         puntuacion = 0;
 
         estrellas.forEach(e => {
-
             e.classList.remove("activa");
         });
 
@@ -99,4 +151,91 @@ document
             "No fue posible guardar la calificación"
         );
     }
+});
+
+
+// ======================================
+// CARGAR CALIFICACIONES DEL PRODUCTO
+// ======================================
+
+async function cargarCalificaciones() {
+
+    const productoId =
+    localStorage.getItem(
+        "productoSeleccionado"
+    );
+
+    if (!productoId) return;
+
+    const lista =
+    document.getElementById(
+        "listaCalificaciones"
+    );
+
+    try {
+
+        const respuesta =
+        await fetch(
+            "http://localhost:3000/calificaciones"
+        );
+
+        const calificaciones =
+        await respuesta.json();
+
+        const delProducto =
+        calificaciones.filter(
+            c => c.productoId === productoId
+        );
+
+        if (delProducto.length === 0) {
+
+            lista.innerHTML = `
+                <p>
+                    Este producto aún no tiene opiniones.
+                </p>
+            `;
+
+            return;
+        }
+
+        lista.innerHTML = "";
+
+        delProducto.forEach(calificacion => {
+
+            lista.innerHTML += `
+                <div class="comentario">
+
+                    <h4>
+                        ${"⭐".repeat(
+                            calificacion.puntuacion
+                        )}
+                    </h4>
+
+                    <p>
+                        ${calificacion.comentario || ""}
+                    </p>
+
+                    <small>
+                        ${new Date(
+                            calificacion.fecha
+                        ).toLocaleDateString()}
+                    </small>
+
+                </div>
+            `;
+        });
+
+    } catch (error) {
+
+        console.error(error);
+    }
+}
+
+
+// Cargar opiniones al abrir la página
+window.addEventListener("load", () => {
+
+    cargarProducto();
+
+    cargarCalificaciones();
 });

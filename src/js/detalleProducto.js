@@ -130,6 +130,29 @@ if (btnComprar) {
     });
 }
 
+// Datos de sedes desde json-server
+async function inicializarMapa() { //http://localhost:3000/sedes
+  const response = await fetch("http://localhost:8003/api/v1/geolocation/all_address");
+  const sedes = await response.json();
+
+  // Centra el iframe en la primera sede al cargar
+  document.getElementById("mapaFrame").src =
+    `https://www.google.com/maps?q=${sedes[0].latitude},${sedes[0].longitude}&z=15&output=embed`;
+
+  // Al seleccionar una sede en el select, el mapa vuela a ella
+  document.getElementById("sede").addEventListener("change", (e) => {
+    const sedeId = e.target.value;
+    const sede = sedes.find(s => s.id === sedeId);
+    if (!sede) return;
+
+    document.getElementById("mapaFrame").src =
+      `https://www.google.com/maps?q=${sede.latitude},${sede.longitude}&z=16&output=embed`;
+  });
+}
+
+inicializarMapa();
+
+
 // =============================================
 // MAPA
 // =============================================

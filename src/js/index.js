@@ -33,10 +33,12 @@ function tokenEsValido(token) {
   if (!token) return false;
   const payload = parseJWT(token);
   if (!payload) return false;
+
   if (payload.exp && Date.now() / 1000 > payload.exp) {
     localStorage.removeItem("jwt");
     return false;
   }
+
   return true;
 }
 
@@ -55,9 +57,11 @@ const headersAdmin = {
 };
 
 if (usuarioLogueado) {
-  const btnPanelAdmin = rolUsuario === "ADMINISTRADOR"
-    ? `<a href="admin.html" id="btnAdminIndex" style="background:#1e3a8a;color:white;padding:5px 15px;border-radius:5px;text-decoration:none;font-weight:bold;margin-right:10px;">Panel Admin</a>`
-    : "";
+
+  const btnPanelAdmin =
+    rolUsuario === "ADMINISTRADOR"
+      ? `<a href="admin.html" id="btnAdminIndex" style="background:#1e3a8a;color:white;padding:5px 15px;border-radius:5px;text-decoration:none;font-weight:bold;margin-right:10px;">Panel Admin</a>`
+      : "";
 
   const btnVender = rolUsuario !== "ADMINISTRADOR"
     ? `<button type="button" id="btnVender" style="margin-right:10px;">Vender Producto</button>`
@@ -76,9 +80,11 @@ if (usuarioLogueado) {
 
   // Asignación de rutas
   if (document.getElementById("btnVender")) {
-    document.getElementById("btnVender").addEventListener("click", () => {
-      window.location.href = "venderProductos.html";
-    });
+    document
+      .getElementById("btnVender")
+      .addEventListener("click", () => {
+        window.location.href = "venderProductos.html";
+      });
   }
   
   if (document.getElementById("btnPQRS")) {
@@ -90,29 +96,35 @@ if (usuarioLogueado) {
   document.getElementById("btnPerfil").addEventListener("click", () => {
     window.location.href = "perfil.html";
   });
-  document.getElementById("btnCerrarSesion").addEventListener("click", cerrarSesion);
+
+  document
+    .getElementById("btnCerrarSesion")
+    .addEventListener("click", cerrarSesion);
 
 } else {
+
   acciones.innerHTML = `
     <button type="button" id="btnLogin">Iniciar Sesión</button>
     <button type="button" id="btnRegistro">Crear Cuenta</button>
   `;
+
   document.getElementById("btnLogin").addEventListener("click", () => {
     window.location.href = "login.html";
   });
+
   document.getElementById("btnRegistro").addEventListener("click", () => {
     window.location.href = "registro.html";
   });
 }
 
 // =============================================
-// ESTADO
+// DATOS Y ESTADO DEL FILTRO
 // =============================================
 
 let todosLosProductos = [];
-let todasLasSedes     = [];
-let categoriaActiva   = "todas";
-let terminoBusqueda   = "";
+let todasLasSedes = [];
+let todasLasCalificaciones = [];
+let categoriaActiva = "todas";
 
 // =============================================
 // CARGA INICIAL 
@@ -121,6 +133,7 @@ let terminoBusqueda   = "";
 const contenedor = document.getElementById("contenedorProductos");
 
 async function inicializar() {
+
   try {
     const [productos, sedes, categorias] = await Promise.all([
       fetchConRespaldo(`${REAL_API_GRUPO_1}/productos`, `${LOCAL_API}/productos`),
@@ -175,36 +188,100 @@ function aplicarFiltros() {
 // =============================================
 
 function construirFiltros(categorias) {
-  const filtrosContainer = document.getElementById("filtrosCategorias");
+
+  const filtrosContainer =
+    document.getElementById("filtrosCategorias");
+
   if (!filtrosContainer) return;
 
   filtrosContainer.innerHTML = `
-    <button class="btn-filtro activo" data-id="todas">Todas</button>
-    ${categorias.map(cat =>
-      `<button class="btn-filtro" data-id="${cat.id}">${cat.nombre}</button>`
-    ).join("")}
+    <button class="btn-filtro activo" data-id="todas">
+      Todas
+    </button>
+
+    ${categorias.map(cat => `
+      <button class="btn-filtro" data-id="${cat.id}">
+        ${cat.nombre}
+      </button>
+    `).join("")}
   `;
 
-  filtrosContainer.querySelectorAll(".btn-filtro").forEach(btn => {
-    btn.addEventListener("click", () => {
-      filtrosContainer.querySelectorAll(".btn-filtro")
-        .forEach(b => b.classList.remove("activo"));
-      btn.classList.add("activo");
-      categoriaActiva = btn.dataset.id;
-      aplicarFiltros();
+  filtrosContainer
+    .querySelectorAll(".btn-filtro")
+    .forEach((btn) => {
+
+      btn.addEventListener("click", () => {
+
+        filtrosContainer
+          .querySelectorAll(".btn-filtro")
+          .forEach((b) => b.classList.remove("activo"));
+
+        btn.classList.add("activo");
+
+        categoriaActiva = btn.dataset.id;
+
+        const filtrados =
+          categoriaActiva === "todas"
+            ? todosLosProductos
+            : todosLosProductos.filter(
+                (p) => p.categoriaId === categoriaActiva
+              );
+
+        renderizarProductos(filtrados);
+      });
     });
-  });
 }
+
+
+
+function obtenerCalificacionProducto(productoId) {
+
+  const calificaciones =
+    todasLasCalificaciones.filter(
+      c => c.productoId === productoId
+    );
+
+  if (calificaciones.length === 0) {
+
+    return {
+      promedio: 0,
+      cantidad: 0
+    };
+  }
+
+  const suma =
+    calificaciones.reduce(
+      (acc, c) =>
+        acc + Number(c.puntuacion),
+      0
+    );
+
+  return {
+    promedio:
+      (
+        suma /
+        calificaciones.length
+      ).toFixed(1),
+
+    cantidad:
+      calificaciones.length
+  };
+}
+
 
 // =============================================
 // RENDER DE PRODUCTOS
 // =============================================
 
 function renderizarProductos(productos) {
+
   contenedor.innerHTML = "";
 
   if (productos.length === 0) {
-    contenedor.innerHTML = "<p>No hay productos que coincidan con la búsqueda.</p>";
+
+    contenedor.innerHTML =
+      "<p>No hay productos en esta categoría.</p>";
+
     return;
   }
 
@@ -250,7 +327,6 @@ function renderizarProductos(productos) {
         ${controlesAdmin}
       </div>
     `;
-    contenedor.appendChild(card);
   });
 }
 
@@ -316,8 +392,12 @@ window.verDetalleProducto = function(id) {
 // =============================================
 
 function cerrarSesion() {
+
+  localStorage.removeItem("jwt");
   localStorage.clear();
-  window.location.href = "index.html";
+
+  window.location.href =
+    "index.html";
 }
 
 // =============================================
