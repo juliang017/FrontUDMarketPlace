@@ -5,6 +5,13 @@ const API_BASE_URL = "http://localhost:3000"; // Para productos, categorías, us
 const API_GRUPO_1 = 'http://localhost:8080/api';
 const API_GRUPO_2 = 'http://localhost:3000/sedes'; // Se usa el host actual manejado para Grupo 2
 
+const API_BASE_URL = "http://localhost:3000"; // Para productos, categorías, usuarios y pqrs
+const API_GRUPO_1 = 'http://localhost:8080/api';
+const API_GRUPO_2_CUPONES = 'http://localhost:8001';
+const API_GRUPO_2_EMAIL = 'http://localhost:8002'; // Se usa el host actual manejado para Grupo 2
+const API_GRUPO_2_GEO = 'http://localhost:8003';
+const API_GRUPO_2_REPORTES = 'http://localhost:8004';
+
 document.addEventListener('DOMContentLoaded', async () => {
 
     const token = localStorage.getItem("jwt");
