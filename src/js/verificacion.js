@@ -3,6 +3,8 @@
 // =============================================
 
 const correo = localStorage.getItem("correoUsuario");
+// Recuperamos el rol del db.json (si estamos usando el backend local)
+const rolTemporal = localStorage.getItem("rolTemporal");
 
 document.getElementById("mensajeCorreo").textContent =
   `Hemos enviado un código a ${correo}`;
@@ -33,7 +35,8 @@ inputs.forEach((input, index) => {
 // VERIFICACIÓN Y GENERACIÓN DE JWT
 // =============================================
 
-const MODO_PRUEBA = true;
+// Cambia a 'false' cuando te conectes al Java real
+const MODO_PRUEBA = true; 
 const CODIGO_PRUEBA = "123456";
 
 document.getElementById("btnVerificar").addEventListener("click", async () => {
@@ -45,26 +48,27 @@ document.getElementById("btnVerificar").addEventListener("click", async () => {
     return;
   }
 
+  // --- FLUJO LOCAL (json-server db.json) ---
   if (MODO_PRUEBA) {
     if (codigo !== CODIGO_PRUEBA) {
       mostrarError("Código incorrecto. Usa 123456 en modo prueba");
       return;
     }
 
-    // Simula respuesta del backend con rol
-    const rolSimulado = "USUARIO"; // Cambia a "ADMIN" para probar ese flujo
+    // Tomamos el rol del db.json y lo aplicamos
+    const rolSimulado = rolTemporal || "USUARIO";
 
     generarYGuardarJWT(correo, rolSimulado);
     redirigirPorRol(rolSimulado);
     return;
   }
 
-  // --- Flujo real con backend ---
+  // --- FLUJO REAL CON BACKEND (JAVA) ---
   try {
-    const response = await fetch("http://localhost:3000/verificar", {
+    const response = await fetch("http://localhost:8080/api/auth/verify-2fa", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ correo, codigo }),
+      body: JSON.stringify({ correo, codigo2FA: codigo }),
     });
 
     if (!response.ok) {
@@ -74,19 +78,30 @@ document.getElementById("btnVerificar").addEventListener("click", async () => {
 
     const data = await response.json();
 
-    // Si el backend ya devuelve el JWT directamente:
     if (data.token) {
+      // El backend nos da el token real firmado
       localStorage.setItem("jwt", data.token);
-      redirigirPorRol(parseJWT(data.token)?.rol);
+      
+      // Extraemos el rol del Token que manda el backend
+      const payload = parseJWT(data.token);
+      let rolBackend = payload.rolUsua || payload.role || payload.rol || "USUARIO";
+      
+      // SOLUCIÓN AL PROBLEMA DEL BACKEND:
+      // Si el backend manda "COMPRADOR" o "VENDEDOR", el Frontend lo ignora y lo unifica como "USUARIO"
+      // Así la persona podrá comprar y vender con la misma cuenta. 
+      // Si es "ADMINISTRADOR", se respeta y se va a su panel seguro.
+      if (rolBackend !== "ADMINISTRADOR") {
+          rolBackend = "USUARIO";
+      }
+
+      // Guardamos el rol global para el index.js
+      localStorage.setItem("userRole", rolBackend);
+      redirigirPorRol(rolBackend);
       return;
     }
 
-    // Si el backend devuelve solo el rol y generamos el JWT localmente:
-    generarYGuardarJWT(correo, data.rol);
-    redirigirPorRol(data.rol);
-
   } catch (err) {
-    mostrarError("No se pudo conectar con el servidor");
+    mostrarError("No se pudo conectar con el servidor real");
     console.error(err);
   }
 });
@@ -102,7 +117,7 @@ document.getElementById("btnReenviar").addEventListener("click", async () => {
   }
 
   try {
-    await fetch("http://localhost:3000/reenviar-codigo", {
+    await fetch("http://localhost:8080/api/auth/resend-2fa", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ correo }),
@@ -126,7 +141,9 @@ function generarYGuardarJWT(correo, rol) {
     exp: Math.floor(Date.now() / 1000) + 3600, // 1 hora
   }));
   const jwt = `${header}.${payload}.firma_simulada`;
+  
   localStorage.setItem("jwt", jwt);
+  localStorage.setItem("userRole", rol); // Guardamos para index.js
 }
 
 function parseJWT(token) {
@@ -138,10 +155,11 @@ function parseJWT(token) {
 }
 
 function redirigirPorRol(rol) {
-  if (rol === "ADMIN") {
-    window.location.href = "admin.html";
+  // Como unificamos roles, solo hay dos caminos posibles:
+  if (rol === "ADMINISTRADOR") {
+    window.location.href = "admin.html"; // Entorno seguro y aislado
   } else {
-    window.location.href = "index.html";
+    window.location.href = "index.html"; // Compradores y Vendedores entran al Marketplace
   }
 }
 

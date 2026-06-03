@@ -1,6 +1,14 @@
 {
   "usuarios": [
     {
+      "id": "admin-1",
+      "primerNombre": "Super",
+      "primerApellido": "Administrador",
+      "correo": "admin@udmarketplace.com",
+      "contrasena": "Admin123!",
+      "rol": "ADMINISTRADOR"
+    },
+    {
       "id": "1",
       "primerNombre": "Juan",
       "segundoNombre": "Carlos",
@@ -9,8 +17,9 @@
       "fechaNacimiento": "2000-05-15",
       "correoInstitucional": "juan.perez@udistrital.edu.co",
       "telefono": "3001234567",
-      "contrasena": "juan123456",
-      "calificacion": 4.5
+      "contrasena": "123456789",
+      "calificacion": 4.5,
+      "rol": "USUARIO"
     },
     {
       "id": "2",
@@ -22,7 +31,8 @@
       "correoInstitucional": "maria.rodriguez@udistrital.edu.co",
       "telefono": "3109876543",
       "contrasena": "maria123",
-      "calificacion": 4.8
+      "calificacion": 4.8,
+      "rol": "USUARIO"
     },
     {
       "id": "3",
@@ -34,7 +44,8 @@
       "correoInstitucional": "andres.martinez@udistrital.edu.co",
       "telefono": "3204567890",
       "contrasena": "andres123",
-      "calificacion": 3.9
+      "calificacion": 3.9,
+      "rol": "USUARIO"
     },
     {
       "primerNombre": "Camilo",
@@ -229,6 +240,7 @@
       "respuestaAdmin": "sapo"
     }
   ],
+  "calificaciones": [],
   "calificaciones": [],
   "$schema": "./node_modules/json-server/schema.json"
 }
