@@ -1,89 +1,107 @@
-# UD Market Place
+# FrontUDMarketPlace
 
-## Descripción
+Marketplace web desarrollado para la comunidad de la Universidad Distrital Francisco José de Caldas, permitiendo la publicación, consulta y gestión de productos entre estudiantes, así como la interacción mediante calificaciones y PQR asociadas a los productos.
 
-UD Market Place es una plataforma web desarrollada para la comunidad de la Universidad Distrital Francisco José de Caldas que permite la compra y venta de productos entre estudiantes, docentes y demás miembros de la institución.
+## Integrantes
 
-El sistema busca facilitar el intercambio de artículos dentro de la universidad mediante una interfaz sencilla, segura y accesible.
+* Luis Rojas Rada #20222020242,
+* Tomas Arévalo Montes #20232020267,
+* Juan Diego Ávila Tafur #20221020132,
+* Kevin Julian Neisa Gonzalez #20222020224,
+* Julian Camilo Gómez Nieto #20222020215
 
+## Descripción del Proyecto
 
-## Tecnologías utilizadas
+FrontUDMarketPlace es una aplicación web orientada a la compra y venta de productos dentro de la comunidad universitaria. El sistema permite a los usuarios registrarse, iniciar sesión, publicar productos, consultar productos disponibles, calificar productos adquiridos y generar Peticiones, Quejas o Reclamos (PQR).
+
+El proyecto utiliza un entorno frontend desarrollado con HTML, CSS y JavaScript, junto con JSON Server como backend simulado para el almacenamiento de información.
+
+## Funcionalidades Implementadas
+
+### Gestión de Usuarios
+
+* Registro de usuarios.
+* Inicio de sesión.
+* Edición de perfil.
+* Visualización de información personal.
+
+### Gestión de Productos
+
+* Publicación de productos.
+* Consulta de productos disponibles.
+* Filtrado por categorías.
+* Visualización de sede asociada.
+* Modificación y eliminación de productos (Administrador).
+
+### Calificaciones de Productos
+
+* Calificación mediante sistema de estrellas.
+* Comentarios asociados a cada producto.
+* Cálculo automático del promedio de calificación.
+* Visualización de opiniones de los usuarios.
+* Conteo de calificaciones por producto.
+
+### Sistema PQR
+
+* Creación de Peticiones.
+* Creación de Quejas.
+* Creación de Reclamos.
+* Asociación de cada PQR a un producto específico.
+* Estado de seguimiento de la solicitud.
+* Campo para respuesta administrativa.
+
+### Gestión de Roles
+
+* Usuario.
+* Administrador.
+
+### Administración
+
+* Eliminación de productos.
+* Edición de precios.
+* Visualización de herramientas administrativas.
+
+---
+
+## Tecnologías Utilizadas
 
 ### Frontend
 
 * HTML5
 * CSS3
-* JavaScript (Vanilla JS)
-* Vite
+* JavaScript ES6
 
-### Backend de pruebas
+### Backend Simulado
 
 * JSON Server
 
-### Control de versiones
+### Herramientas
 
+* Node.js
+* npm
+* Vite
 * Git
 * GitHub
 
 ---
 
-## Funcionalidades implementadas
-
-### Gestión de usuarios
-
-* Registro de usuarios.
-* Inicio de sesión.
-* Verificación de credenciales.
-* Edición de perfil.
-* Actualización de información personal.
-
-### Gestión de productos
-
-* Publicación de productos.
-* Consulta de productos disponibles.
-* Asociación de productos a categorías.
-* Asociación de productos a sedes universitarias.
-
-### Perfil de usuario
-
-* Visualización de información personal.
-* Edición de datos del perfil.
-* Actualización de datos en JSON Server.
-* Visualización de calificación promedio.
-
-### Sistema de calificaciones
-
-* Calificación de vendedores.
-* Comentarios sobre la experiencia de compra.
-* Cálculo automático del promedio de calificaciones.
-* Visualización de reputación del vendedor.
-
-### Sistema PQR
-
-* Registro de peticiones.
-* Registro de quejas.
-* Registro de reclamos.
-* Almacenamiento de solicitudes en JSON Server.
-* Gestión de estados de atención.
-
----
-
-## Estructura del proyecto
+## Estructura del Proyecto
 
 ```text
-FrontUDMarketPlace
+FrontUDMarketPlace/
 │
 ├── public/
 │
 ├── src/
 │   ├── css/
-│   │   ├── login.css
+│   │   ├── index.css
 │   │   ├── perfil.css
 │   │   ├── pqr.css
 │   │   ├── calificaciones.css
 │   │   └── ...
 │   │
 │   ├── js/
+│   │   ├── index.js
 │   │   ├── login.js
 │   │   ├── perfil.js
 │   │   ├── pqr.js
@@ -94,26 +112,12 @@ FrontUDMarketPlace
 │
 ├── db.json
 ├── package.json
+├── index.html
 ├── perfil.html
 ├── pqr.html
 ├── calificaciones.html
-└── ...
+└── README.md
 ```
-
----
-
-## Base de datos simulada
-
-El proyecto utiliza JSON Server para simular una API REST.
-
-Colecciones principales:
-
-* usuarios
-* productos
-* categorias
-* sedes
-* pqrs
-* calificaciones
 
 ---
 
@@ -122,7 +126,7 @@ Colecciones principales:
 ### 1. Clonar el repositorio
 
 ```bash
-git clone URL_DEL_REPOSITORIO
+git clone <URL_DEL_REPOSITORIO>
 ```
 
 ### 2. Ingresar al proyecto
@@ -137,38 +141,19 @@ cd FrontUDMarketPlace
 npm install
 ```
 
----
-
-## Ejecución del Backend
-
-Iniciar JSON Server:
+### 4. Iniciar JSON Server
 
 ```bash
-npx json-server db.json --port 3000
+npx json-server db.json
 ```
 
-API disponible en:
+Servidor disponible en:
 
 ```text
 http://localhost:3000
 ```
 
-Endpoints principales:
-
-```text
-http://localhost:3000/usuarios
-http://localhost:3000/productos
-http://localhost:3000/categorias
-http://localhost:3000/sedes
-http://localhost:3000/pqrs
-http://localhost:3000/calificaciones
-```
-
----
-
-## Ejecución del Frontend
-
-Iniciar Vite:
+### 5. Iniciar el frontend
 
 ```bash
 npm run dev
@@ -182,51 +167,111 @@ http://localhost:5173
 
 ---
 
-## Casos de uso destacados
+## Endpoints Principales
 
-### Registrar una PQR
+### Usuarios
 
-1. Acceder a la vista de PQR.
-2. Seleccionar el tipo:
+```text
+GET    /usuarios
+POST   /usuarios
+PUT    /usuarios/:id
+DELETE /usuarios/:id
+```
+
+### Productos
+
+```text
+GET    /productos
+POST   /productos
+PUT    /productos/:id
+DELETE /productos/:id
+```
+
+### Calificaciones
+
+```text
+GET    /calificaciones
+POST   /calificaciones
+```
+
+### PQR
+
+```text
+GET    /pqrs
+POST   /pqrs
+PUT    /pqrs/:id
+```
+
+---
+
+## Flujo de Calificaciones
+
+1. El usuario selecciona un producto.
+2. El sistema almacena el identificador del producto.
+3. El usuario asigna una puntuación entre 1 y 5 estrellas.
+4. Se registra un comentario opcional.
+5. La información se almacena en `calificaciones`.
+6. El promedio del producto se actualiza automáticamente.
+
+---
+
+## Flujo de PQR
+
+1. El usuario selecciona un producto.
+2. Accede al formulario de PQR.
+3. Selecciona:
 
    * Petición
    * Queja
    * Reclamo
-3. Completar asunto y descripción.
-4. Enviar la solicitud.
-5. La información se almacena en JSON Server.
-
-### Calificar un vendedor
-
-1. Acceder a la vista de calificaciones.
-2. Seleccionar una puntuación de 1 a 5 estrellas.
-3. Escribir un comentario.
-4. Guardar la calificación.
-5. El promedio se refleja automáticamente en el perfil del vendedor.
-
-### Editar perfil
-
-1. Ingresar al perfil.
-2. Seleccionar "Editar perfil".
-3. Modificar los campos deseados.
-4. Guardar cambios.
-5. La información se actualiza en la base de datos.
+4. Ingresa asunto y descripción.
+5. El sistema registra la solicitud asociada al producto.
 
 ---
 
-## Estado del proyecto
+## Modelo de Datos
 
-Versión académica funcional.
+### Calificación
 
-Módulos implementados:
+```json
+{
+  "id": "1",
+  "usuarioId": "1",
+  "productoId": "4",
+  "puntuacion": 5,
+  "comentario": "Excelente producto",
+  "fecha": "2026-06-03T05:08:45.987Z"
+}
+```
 
-* Registro
-* Login
-* Gestión de productos
-* Perfil de usuario
-* Sistema PQR
-* Sistema de calificaciones
-* Integración con JSON Server
+### PQR
+
+```json
+{
+  "id": "1",
+  "usuarioId": "1",
+  "productoId": "4",
+  "tipo": "Queja",
+  "asunto": "Producto defectuoso",
+  "mensaje": "La silla llegó rota",
+  "estado": "Pendiente",
+  "respuestaAdmin": ""
+}
+```
+
+---
+
+## Posibles Mejoras Futuras
+
+* Integración con backend real.
+* Base de datos relacional.
+* Autenticación JWT completa.
+* Recuperación de contraseña.
+* Sistema de compras.
+* Chat entre comprador y vendedor.
+* Historial de transacciones.
+* Gestión avanzada de PQR.
+* Dashboard administrativo.
 
 ---
 

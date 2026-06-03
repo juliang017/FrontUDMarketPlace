@@ -3,29 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calificar vendedor</title>
+    <title>Calificar producto</title>
 
-    <link rel="stylesheet"
-          href="./src/css/calificaciones.css">
+    <link rel="stylesheet" href="./src/css/calificaciones.css">
 </head>
 <body>
 
     <div class="contenedor">
 
-        <h1>Calificar vendedor</h1>
+        <h1>Calificar producto</h1>
 
-        <h3 id="nombreVendedor">
-            Juan Pérez
+        <h3 id="nombreProducto">
+            Producto XYZ
         </h3>
 
         <div class="estrellas">
-
             <span data-value="1">★</span>
             <span data-value="2">★</span>
             <span data-value="3">★</span>
             <span data-value="4">★</span>
             <span data-value="5">★</span>
-
         </div>
 
         <textarea
@@ -34,12 +31,17 @@
         </textarea>
 
         <button id="btnEnviar">
-
             Guardar Calificación
-
         </button>
 
-    </div>
+        <hr>
+
+        <h2>Opiniones del producto</h2>
+
+        <div id="listaCalificaciones">
+        </div>
+
+    </div> <!-- Cierre de .contenedor -->
 
     <script src="./src/js/calificaciones.js"></script>
 

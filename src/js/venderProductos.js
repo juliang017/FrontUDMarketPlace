@@ -1,3 +1,34 @@
+// =============================================
+// ENRUTADOR TOLERANTE A FALLOS
+// =============================================
+const LOCAL_API = "http://localhost:3000";
+const REAL_API_JAVA = "http://localhost:8080/api";
+const REAL_API_PYTHON = "http://localhost:8000/sedes";
+
+async function apiFetchIntegrado(urlReal, urlLocal, opciones = {}) {
+    try {
+        const response = await fetch(urlReal, opciones);
+        if (!response.ok) throw new Error("Fallo API Real");
+        return await response.json(); // En Java devuelve JSON
+    } catch(e) {
+        console.warn(`Fallback a local: ${urlLocal}`);
+        const resLocal = await fetch(urlLocal, opciones);
+        return await resLocal.json();
+    }
+}
+
+async function apiFetchIntegradoNoJSON(urlReal, urlLocal, opciones = {}) {
+    // Igual a la anterior pero sin el .json() (Útil para métodos DELETE que devuelven Status 204)
+    try {
+        const response = await fetch(urlReal, opciones);
+        if (!response.ok) throw new Error("Fallo API Real");
+        return response; 
+    } catch(e) {
+        console.warn(`Fallback a local: ${urlLocal}`);
+        return await fetch(urlLocal, opciones);
+    }
+}
+
 let terminoBusqueda   = "";
 let todosLosProductos = [];
 let todasLasSedes     = [];
@@ -30,6 +61,11 @@ const jwt = localStorage.getItem("jwt");
 if (!tokenEsValido(jwt)) window.location.href = "login.html";
 
 const usuarioId = parseJWT(jwt)?.sub || localStorage.getItem("usuarioId");
+
+const headersAuth = {
+    "Content-Type": "application/json",
+    // "Authorization": `Bearer ${jwt}` // Descomenta cuando Java active la seguridad
+};
 
 // =============================================
 // NAVEGACIÓN
@@ -74,28 +110,28 @@ function aplicarFiltros() {
 }
 
 // =============================================
-// CARGA DE PRODUCTOS DEL USUARIO
+// CARGA DE PRODUCTOS DEL USUARIO (ENRUTADA)
 // =============================================
 
 const contenedor = document.getElementById("contenedorMisProductos");
 
 async function cargarMisProductos() {
   try {
+    // 1. EL CÓMO: Usamos la función enrutadora para pegarle a Java y a Python primero
     const [resProd, resSedes] = await Promise.all([
-      fetch(`http://localhost:3000/productos?usuarioId=${usuarioId}`),
-      fetch("http://localhost:3000/sedes"),
+      apiFetchIntegrado(`${REAL_API_JAVA}/productos`, `${LOCAL_API}/productos`, { headers: headersAuth }),
+      apiFetchIntegrado(REAL_API_PYTHON, `${LOCAL_API}/sedes`, { headers: headersAuth }),
     ]);
 
-    if (!resProd.ok || !resSedes.ok) throw new Error("Error al obtener datos");
-
-    todosLosProductos = await resProd.json();
-    todasLasSedes     = await resSedes.json();
+    // 2. EL QUÉ: Filtramos a nivel de Front los productos de ESTE usuario
+    todosLosProductos = resProd.filter(p => String(p.usuarioId) === String(usuarioId));
+    todasLasSedes     = resSedes;
 
     aplicarFiltros();
 
   } catch (err) {
     contenedor.innerHTML =
-      "<p class='error-carga'>No se pudieron cargar tus productos. Verifica que json-server esté activo.</p>";
+      "<p class='error-carga'>Fallo general de servidores (Real y Local apagados).</p>";
     console.error(err);
   }
 }
@@ -120,8 +156,9 @@ function renderizarProductos(productos) {
   }
 
   productos.forEach(producto => {
-    const sede = todasLasSedes.find(s => s.id === producto.sedeId);
-    const nombreSede = sede ? sede.nombre : "Sede no especificada";
+    // Solución para compatibilidad de sede.nombre (Local) vs sede.name (Python)
+    const sede = todasLasSedes.find(s => String(s.id) === String(producto.sedeId));
+    const nombreSede = sede ? (sede.name || sede.nombre) : "Sede no especificada";
 
     const card = document.createElement("div");
     card.className = "card";
@@ -155,7 +192,7 @@ function renderizarProductos(productos) {
 }
 
 // =============================================
-// ACCIONES
+// ACCIONES (ENRUTADAS)
 // =============================================
 
 function editarProducto(id) {
@@ -164,12 +201,15 @@ function editarProducto(id) {
 }
 
 async function eliminarProducto(id, cardElement) {
-  if (!confirm("¿Seguro que quieres eliminar este producto?")) return;
+  if (!confirm("¿Seguro que quieres eliminar este producto permanentemente?")) return;
 
   try {
-    const response = await fetch(`http://localhost:3000/productos/${id}`, {
-      method: "DELETE",
-    });
+    // EL CÓMO: Intentamos hacer DELETE en Java (api/seller/productos/id)
+    const response = await apiFetchIntegradoNoJSON(
+        `${REAL_API_JAVA}/seller/productos/${id}`, 
+        `${LOCAL_API}/productos/${id}`, 
+        { method: "DELETE", headers: headersAuth }
+    );
 
     if (!response.ok) throw new Error("Error al eliminar");
 
@@ -178,7 +218,8 @@ async function eliminarProducto(id, cardElement) {
     cardElement.style.transform = "scale(0.95)";
     setTimeout(() => {
       cardElement.remove();
-      todosLosProductos = todosLosProductos.filter(p => p.id !== id);
+      todosLosProductos = todosLosProductos.filter(p => String(p.id) !== String(id));
+      if (todosLosProductos.length === 0) renderizarProductos([]); // Re-render para mostrar el estado vacío
     }, 300);
 
   } catch (err) {
