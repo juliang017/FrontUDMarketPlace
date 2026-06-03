@@ -141,6 +141,8 @@ async function mostrarProducto(producto) {
 
         console.error("Error cargando sede:", error);
     }
+
+    cargarMapa(producto.sedeId);
 }
 
 // =============================================
@@ -178,3 +180,58 @@ if (btnComprar) {
 // =============================================
 
 cargarProducto();
+
+async function cargarMapa(idSede) {
+
+    console.log("ID sede:", idSede);
+
+    try {
+
+        const respuesta = await fetch(
+            `http://localhost:8003/api/v1/geolocation/id/${idSede}`
+        );
+
+        if(!respuesta.ok){
+            throw new Error("Ubicación no encontrada");
+        }
+
+        const data = await respuesta.json();
+
+        console.log("Respuesta backend:", data);
+
+        const lat = data.latitude;
+        const lon = data.longitude;
+
+        const mapa = L.map("mapa").setView(
+            [lat, lon],
+            16
+        );
+
+        L.tileLayer(
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                attribution: "© OpenStreetMap"
+            }
+        ).addTo(mapa);
+
+        L.marker([lat, lon])
+            .addTo(mapa)
+            .bindTooltip(
+                data.name,
+                {
+                    permanent: true,
+                    direction: "top"
+                }
+            );
+
+    }
+    catch(error){
+
+        console.error(
+            "Error cargando mapa:",
+            error
+        );
+
+    }
+
+}

@@ -6,6 +6,11 @@
     <title>Detalle Producto</title>
 
     <link rel="stylesheet" href="src/css/detalleProducto.css">
+
+    <link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
 </head>
 
 <body>
@@ -66,11 +71,7 @@
 
                 <h3>Ubicación del vendedor</h3>
 
-                <div id="mapa">
-
-                    Ubicación disponible próximamente
-
-                </div>
+                <div id="mapa"></div>
 
             </div>
 
@@ -81,8 +82,13 @@
         </div>
 
     </main>
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
 
-    <script type="module" src="src/js/detalleProducto.js"></script>
+<script src="src/js/detalleProducto.js"></script>
+
+    
 
 </body>
 
