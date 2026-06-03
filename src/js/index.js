@@ -1,4 +1,23 @@
 // =============================================
+// ENRUTADOR DINÁMICO TOLERANTE A FALLOS
+// =============================================
+const LOCAL_API = "http://localhost:3000";
+const REAL_API_GRUPO_1 = "http://localhost:8080/api";
+const REAL_API_GRUPO_2 = "http://localhost:8000/sedes"; 
+
+async function fetchConRespaldo(urlReal, urlLocal, opciones = {}) {
+  try {
+      const response = await fetch(urlReal, opciones);
+      if (!response.ok) throw new Error("Backend real arrojó error HTTP");
+      return await response.json();
+  } catch (error) {
+      console.warn(`⚠️ Backend real caído en ${urlReal}. Cambiando a local: ${urlLocal}`);
+      const responseLocal = await fetch(urlLocal, opciones);
+      return await responseLocal.json();
+  }
+}
+
+// =============================================
 // UTILIDAD JWT
 // =============================================
 
@@ -30,27 +49,44 @@ const jwt = localStorage.getItem("jwt");
 const usuarioLogueado = tokenEsValido(jwt);
 const rolUsuario = localStorage.getItem("userRole");
 
+const headersAdmin = {
+  'Content-Type': 'application/json',
+  // 'Authorization': `Bearer ${jwt}` // Descomentar al integrar auth en Java
+};
+
 if (usuarioLogueado) {
   const btnPanelAdmin = rolUsuario === "ADMINISTRADOR"
     ? `<a href="admin.html" id="btnAdminIndex" style="background:#1e3a8a;color:white;padding:5px 15px;border-radius:5px;text-decoration:none;font-weight:bold;margin-right:10px;">Panel Admin</a>`
     : "";
 
   const btnVender = rolUsuario !== "ADMINISTRADOR"
-    ? `<button type="button" id="btnVender">Vender Producto</button>`
+    ? `<button type="button" id="btnVender" style="margin-right:10px;">Vender Producto</button>`
     : "";
+
+  // Integración lógica de PQRS en el Header
+  const btnPQRS = `<button type="button" id="btnPQRS" style="background:#10b981;color:white;border:none;padding:5px 15px;border-radius:5px;font-weight:bold;cursor:pointer;margin-right:10px;">Soporte / PQRS</button>`;
 
   acciones.innerHTML = `
     ${btnPanelAdmin}
+    ${btnPQRS}
     ${btnVender}
     <button type="button" id="btnPerfil">Mi Perfil</button>
     <button type="button" id="btnCerrarSesion">Cerrar Sesión</button>
   `;
 
+  // Asignación de rutas
   if (document.getElementById("btnVender")) {
     document.getElementById("btnVender").addEventListener("click", () => {
       window.location.href = "venderProductos.html";
     });
   }
+  
+  if (document.getElementById("btnPQRS")) {
+    document.getElementById("btnPQRS").addEventListener("click", () => {
+      window.location.href = "pqr.html";
+    });
+  }
+
   document.getElementById("btnPerfil").addEventListener("click", () => {
     window.location.href = "perfil.html";
   });
@@ -79,33 +115,28 @@ let categoriaActiva   = "todas";
 let terminoBusqueda   = "";
 
 // =============================================
-// CARGA INICIAL
+// CARGA INICIAL 
 // =============================================
 
 const contenedor = document.getElementById("contenedorProductos");
 
 async function inicializar() {
   try {
-    const [resProd, resSedes, resCats] = await Promise.all([
-      fetch("http://localhost:3000/productos"),
-      fetch("http://localhost:3000/sedes"),
-      fetch("http://localhost:3000/categorias"),
+    const [productos, sedes, categorias] = await Promise.all([
+      fetchConRespaldo(`${REAL_API_GRUPO_1}/productos`, `${LOCAL_API}/productos`),
+      fetchConRespaldo(`${REAL_API_GRUPO_2}`, `${LOCAL_API}/sedes`),
+      fetchConRespaldo(`${REAL_API_GRUPO_1}/categorias`, `${LOCAL_API}/categorias`),
     ]);
 
-    if (!resProd.ok || !resSedes.ok || !resCats.ok)
-      throw new Error("Error al obtener datos");
+    todosLosProductos = productos;
+    todasLasSedes     = sedes;
+    const categoriasData = categorias;
 
-    todosLosProductos = await resProd.json();
-    todasLasSedes     = await resSedes.json();
-    const categorias  = await resCats.json();
-
-    construirFiltros(categorias);
+    construirFiltros(categoriasData);
     aplicarFiltros();
 
   } catch (err) {
-    contenedor.innerHTML =
-      "<p>No se pudieron cargar los productos. Verifica que json-server esté activo.</p>";
-    console.error(err);
+    contenedor.innerHTML = "<p>Error crítico de red. Verifica los servidores.</p>";
   }
 }
 
@@ -114,21 +145,21 @@ async function inicializar() {
 // =============================================
 
 const inputBusqueda = document.querySelector(".busqueda input");
-
-inputBusqueda.addEventListener("input", () => {
-  terminoBusqueda = inputBusqueda.value.trim().toLowerCase();
-  aplicarFiltros();
-});
+if (inputBusqueda) {
+    inputBusqueda.addEventListener("input", () => {
+      terminoBusqueda = inputBusqueda.value.trim().toLowerCase();
+      aplicarFiltros();
+    });
+}
 
 // =============================================
 // FUNCIÓN CENTRAL DE FILTRADO
-// Combina categoría activa + término de búsqueda
 // =============================================
 
 function aplicarFiltros() {
   let resultado = categoriaActiva === "todas"
     ? todosLosProductos
-    : todosLosProductos.filter(p => p.categoriaId === categoriaActiva);
+    : todosLosProductos.filter(p => String(p.categoriaId) === String(categoriaActiva));
 
   if (terminoBusqueda !== "") {
     resultado = resultado.filter(p =>
@@ -178,8 +209,8 @@ function renderizarProductos(productos) {
   }
 
   productos.forEach(producto => {
-    const sede = todasLasSedes.find(s => s.id === producto.sedeId);
-    const nombreSede = sede ? sede.nombre : "Sede no especificada";
+    const sede = todasLasSedes.find(s => String(s.id) === String(producto.sedeId));
+    const nombreSede = sede ? (sede.name || sede.nombre) : "Sede no especificada";
 
     const controlesAdmin = rolUsuario === "ADMINISTRADOR" ? `
       <div style="margin-top:10px;display:flex;gap:5px;width:100%;">
@@ -197,9 +228,15 @@ function renderizarProductos(productos) {
     const card = document.createElement("div");
     card.className = "card";
     card.dataset.id = producto.id;
-    card.addEventListener("click", () => {
-    verDetalleProducto(producto.id);
-});
+    card.style.cursor = "pointer";
+
+    // ✅ SOLUCIÓN AL REDIRECCIONAMIENTO ROTO
+    // Se intercepta el clic analizando la etiqueta objetivo para no chocar con los botones.
+    card.onclick = function(event) {
+        if(event.target.tagName === 'BUTTON') return; 
+        verDetalleProducto(producto.id);
+    };
+
     card.innerHTML = `
       <img
         src="${producto.imagen}"
@@ -218,15 +255,18 @@ function renderizarProductos(productos) {
 }
 
 // =============================================
-// FUNCIONES DE ADMINISTRADOR
+// FUNCIONES DE ADMINISTRADOR Y DETALLE
 // =============================================
 
 window.eliminarProductoDesdeIndex = async function(id) {
   if (!confirm("Modo Admin: ¿Eliminar este producto permanentemente?")) return;
   try {
-    const res = await fetch(`http://localhost:3000/productos/${id}`, { method: "DELETE" });
+    const res = await fetch(`${LOCAL_API}/productos/${id}`, { 
+        method: "DELETE",
+        headers: headersAdmin 
+    });
     if (!res.ok) throw new Error("Error al eliminar");
-    // Remueve la card del DOM sin recargar la página
+    
     const card = contenedor.querySelector(`.card[data-id="${id}"]`);
     if (card) {
       card.style.transition = "opacity .3s, transform .3s";
@@ -234,13 +274,11 @@ window.eliminarProductoDesdeIndex = async function(id) {
       card.style.transform = "scale(0.95)";
       setTimeout(() => {
         card.remove();
-        // Actualiza el array en memoria
-        todosLosProductos = todosLosProductos.filter(p => p.id !== id);
+        todosLosProductos = todosLosProductos.filter(p => String(p.id) !== String(id));
       }, 300);
     }
   } catch (err) {
     alert("No se pudo eliminar el producto.");
-    console.error(err);
   }
 };
 
@@ -252,30 +290,25 @@ window.editarPrecioDesdeIndex = async function(id) {
     return;
   }
   try {
-    const res = await fetch(`http://localhost:3000/productos/${id}`, {
+    const res = await fetch(`${LOCAL_API}/productos/${id}`, {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
+      headers: headersAdmin,
       body: JSON.stringify({ precio: parseInt(nuevoPrecio.trim(), 10) }),
     });
     if (!res.ok) throw new Error("Error al actualizar");
-    // Actualiza el array en memoria y re-renderiza sin recargar
-    const idx = todosLosProductos.findIndex(p => p.id === id);
+    
+    const idx = todosLosProductos.findIndex(p => String(p.id) === String(id));
     if (idx !== -1) {
       todosLosProductos[idx].precio = parseInt(nuevoPrecio.trim(), 10);
       aplicarFiltros();
     }
   } catch (err) {
     alert("No se pudo actualizar el precio.");
-    console.error(err);
   }
 };
+
 window.verDetalleProducto = function(id) {
-
-    console.log("Producto seleccionado:", id);
-
-    window.location.href =
-    `detalleProducto.html?id=${id}`;
-
+    window.location.href = `detalleProducto.html?id=${id}`;
 }
 
 // =============================================

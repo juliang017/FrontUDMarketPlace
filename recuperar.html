@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Contraseña - UD Marketplace</title>
+    <link rel="stylesheet" href="./src/css/login.css">
+</head>
+
+<body>
+    <div class="contenedor">
+        <div class="panel-izquierdo">
+            <img src="./src/img/registro.png" alt="Marketplace" class="imagen">
+        </div>
+
+        <div class="panel-derecho">
+            
+            <div id="paso1">
+                <h1>Recuperar Clave</h1>
+                <p class="subtitulo">Ingresa tu correo institucional para enviarte un código de seguridad.</p>
+
+                <form id="formPaso1">
+                    <div class="grupo">
+                        <label>Correo Institucional</label>
+                        <input type="email" id="correoRecuperacion" placeholder="usuario@udistrital.edu.co" required>
+                        <small class="error" id="errorPaso1" style="color: red;"></small>
+                    </div>
+                    
+                    <button type="submit">Enviar Código</button>
+                    <button type="button" id="btnVolver1" style="background-color: #f3f4f6; color: #374151; margin-top: 10px;">← Volver al inicio</button>
+                </form>
+            </div>
+
+            <div id="paso2" style="display: none;">
+                <h1>Restablecer</h1>
+                <p class="subtitulo">Ingresa el código que recibiste y crea tu nueva contraseña.</p>
+
+                <form id="formPaso2">
+                    <div class="grupo">
+                        <label>Código de Verificación</label>
+                        <input type="text" id="codigoRecuperacion" placeholder="Ej: 123456" style="text-align: center; letter-spacing: 2px;" required>
+                        
+                        <label style="margin-top: 10px;">Nueva Contraseña</label>
+                        <input type="password" id="nuevaContrasena" placeholder="Mínimo 8 caracteres" required>
+                        
+                        <label style="margin-top: 10px;">Confirmar Contraseña</label>
+                        <input type="password" id="confirmarContrasena" placeholder="Repite la contraseña" required>
+                        
+                        <small class="error" id="errorPaso2" style="color: red;"></small>
+                    </div>
+                    
+                    <button type="submit">Actualizar Contraseña</button>
+                    <button type="button" id="btnVolver2" style="background-color: #f3f4f6; color: #374151; margin-top: 10px;">← Cancelar</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="./src/js/recuperar.js"></script>
+</body>
+
+</html>

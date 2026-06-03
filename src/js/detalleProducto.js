@@ -10,9 +10,7 @@ const idProducto = parametros.get("id");
 // =============================================
 
 async function cargarProducto() {
-
     try {
-
         if (!idProducto) {
             throw new Error("No se recibió el ID del producto");
         }
@@ -32,7 +30,6 @@ async function cargarProducto() {
         await mostrarProducto(producto);
 
     } catch (error) {
-
         console.error(error);
 
         document.querySelector(".detalle-info").innerHTML = `
@@ -50,7 +47,6 @@ async function mostrarProducto(producto) {
 
     // Imagen
     const imagen = document.getElementById("imagenProducto");
-
     if (imagen) {
         imagen.src = producto.imagen;
         imagen.alt = producto.nombreProducto;
@@ -58,24 +54,20 @@ async function mostrarProducto(producto) {
 
     // Nombre
     const nombre = document.getElementById("nombreProducto");
-
     if (nombre) {
         nombre.textContent = producto.nombreProducto;
     }
 
     // Descripción
     const descripcion = document.getElementById("descripcionProducto");
-
     if (descripcion) {
         descripcion.textContent = producto.descripcionProducto;
     }
 
     // Precio
     const precio = document.getElementById("precioProducto");
-
     if (precio) {
-        precio.textContent =
-            `$${Number(producto.precio).toLocaleString("es-CO")}`;
+        precio.textContent = `$${Number(producto.precio).toLocaleString("es-CO")}`;
     }
 
     // =============================================
@@ -83,30 +75,15 @@ async function mostrarProducto(producto) {
     // =============================================
 
     try {
-
-        const respuestaCategorias = await fetch(
-            "http://localhost:3000/categorias"
-        );
-
+        const respuestaCategorias = await fetch("http://localhost:3000/categorias");
         const categorias = await respuestaCategorias.json();
-
-        const categoriaEncontrada = categorias.find(
-            c => c.id === producto.categoriaId
-        );
-
-        const categoriaElemento =
-            document.getElementById("categoriaProducto");
+        const categoriaEncontrada = categorias.find(c => c.id === producto.categoriaId);
+        const categoriaElemento = document.getElementById("categoriaProducto");
 
         if (categoriaElemento) {
-
-            categoriaElemento.textContent =
-                categoriaEncontrada
-                    ? categoriaEncontrada.nombre
-                    : "Sin categoría";
+            categoriaElemento.textContent = categoriaEncontrada ? categoriaEncontrada.nombre : "Sin categoría";
         }
-
     } catch (error) {
-
         console.error("Error cargando categoría:", error);
     }
 
@@ -115,30 +92,15 @@ async function mostrarProducto(producto) {
     // =============================================
 
     try {
-
-        const respuestaSedes = await fetch(
-            "http://localhost:3000/sedes"
-        );
-
+        const respuestaSedes = await fetch("http://localhost:3000/sedes");
         const sedes = await respuestaSedes.json();
-
-        const sedeEncontrada = sedes.find(
-            s => s.id === producto.sedeId
-        );
-
-        const ubicacion =
-            document.getElementById("ubicacionProducto");
+        const sedeEncontrada = sedes.find(s => s.id === producto.sedeId);
+        const ubicacion = document.getElementById("ubicacionProducto");
 
         if (ubicacion) {
-
-            ubicacion.textContent =
-                sedeEncontrada
-                    ? sedeEncontrada.nombre
-                    : "Sede no especificada";
+            ubicacion.textContent = sedeEncontrada ? sedeEncontrada.nombre : "Sede no especificada";
         }
-
     } catch (error) {
-
         console.error("Error cargando sede:", error);
     }
 }
@@ -150,11 +112,9 @@ async function mostrarProducto(producto) {
 const btnVolver = document.getElementById("btnVolver");
 
 if (btnVolver) {
-
     btnVolver.addEventListener("click", () => {
-
+        // Redirige a venderProductos.html
         window.location.href = "index.html";
-
     });
 }
 
@@ -165,13 +125,46 @@ if (btnVolver) {
 const btnComprar = document.getElementById("btnComprar");
 
 if (btnComprar) {
-
     btnComprar.addEventListener("click", () => {
-
         alert("Funcionalidad de compra en desarrollo");
-
     });
 }
+
+// =============================================
+// MAPA
+// =============================================
+
+// Datos de sedes desde json-server
+async function inicializarMapa() { 
+    try {
+        const response = await fetch("http://localhost:8003/api/v1/geolocation/all_address");
+        const sedes = await response.json();
+
+        if (sedes && sedes.length > 0) {
+            // Centra el iframe en la primera sede al cargar (corregido el $ en sedes[0].latitude)
+            document.getElementById("mapaFrame").src =
+                `https://www.google.com/maps?q=$${sedes[0].latitude},${sedes[0].longitude}&z=15&output=embed`;
+
+            // Al seleccionar una sede en el select, el mapa vuela a ella
+            const selectSede = document.getElementById("sede");
+            if (selectSede) {
+                selectSede.addEventListener("change", (e) => {
+                    const sedeId = e.target.value;
+                    const sede = sedes.find(s => s.id === sedeId);
+                    if (!sede) return;
+
+                    // Corregido el $ en sede.latitude
+                    document.getElementById("mapaFrame").src =
+                        `https://www.google.com/maps?q=$${sede.latitude},${sede.longitude}&z=16&output=embed`;
+                });
+            }
+        }
+    } catch (error) {
+        console.error("Error inicializando el mapa:", error);
+    }
+}
+
+inicializarMapa();
 
 // =============================================
 // INICIO
