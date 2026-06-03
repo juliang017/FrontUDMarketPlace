@@ -71,15 +71,12 @@ header{
     margin-top:30px;
 }
 
-#mapa{
-    margin-top:10px;
-    height:200px;
-    border:1px solid #ddd;
-    border-radius:10px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:#f1f5f9;
+
+#mapa {
+  width: 100%;
+  height: 350px;   /* ← obligatorio, sin esto Leaflet no sabe cuánto medir */
+  border-radius: 10px;
+  z-index: 0;      /* ← evita que el mapa se monte encima de otros elementos */
 }
 
 #btnComprar{

@@ -73,31 +73,79 @@
     }
   ],
   "sedes": [
-    {
-      "id": "1",
-      "nombre": "Sede 40",
-      "descripcion": "Facultad de ingeniería",
-      "direccion": "Dirección 40",
-      "latitud": 4.687,
-      "longitud": -74.043
-    },
-    {
-      "id": "2",
-      "nombre": "Sede 34",
-      "descripcion": "Salones calle 34",
-      "direccion": "Dirección 34",
-      "latitud": 4.609,
-      "longitud": -74.081
-    },
-    {
-      "id": "3",
-      "nombre": "Sede Crisanto Luque",
-      "descripcion": "Salones arrendados pertenecientes a la ECCI",
-      "direccion": "Carrera 10A #19",
-      "latitud": 4.687,
-      "longitud": -74.043
-    }
-  ],
+  {
+    "id": 1,
+    "nombre": "Sede calle 40",
+    "descripcion": "Sede de la Universidad Distrital Francisco José de Caldas",
+    "direccion": "Cra 7 #40-62, Bogotá, Colombia",
+    "latitude": 4.628101562385973,
+    "longitude": -74.06592693333083
+  },
+  {
+    "id": 2,
+    "nombre": "Sede macarena A",
+    "descripcion": "Sede de la Universidad Distrital Francisco José de Caldas",
+    "direccion": "Cra 3 #N26A-40, Bogotá, Colombia",
+    "latitude": 4.613573017288183,
+    "longitude": -74.06404637326503
+  },
+  {
+    "id": 3,
+    "nombre": "Sede macarena B",
+    "descripcion": "Sede de la Universidad Distrital Francisco José de Caldas",
+    "direccion": "Cra 3A #26B-1, Bogotá, Colombia",
+    "latitude": 4.6135794463079245,
+    "longitude": -74.06526948179399
+  },
+  {
+    "id": 4,
+    "nombre": "Sede calle 34",
+    "descripcion": "Sede de la Universidad Distrital Francisco José de Caldas",
+    "direccion": "Cl 34 #13-15, Bogotá, Colombia",
+    "latitude": 4.621984336272019,
+    "longitude": -74.06837850449529
+  },
+  {
+    "id": 5,
+    "nombre": "Sede Tecnologica",
+    "descripcion": "Sede de la Universidad Distrital Francisco José de Caldas",
+    "direccion": "Cl 68d Bis A Sur #49F - 70 Bloque 6, piso 1, Tecnológica, Bogotá",
+    "latitude": 4.579922365316238,
+    "longitude": -74.15757937482532
+  },
+  {
+    "id": 6,
+    "nombre": "Sede Bosa",
+    "descripcion": "Sede de la Universidad Distrital Francisco José de Caldas",
+    "direccion": "Cl 52 Sur #93d-39, Bogotá, Colombia",
+    "latitude": 4.6384071630332,
+    "longitude": -74.1862601018121
+  },
+  {
+    "id": 7,
+    "nombre": "Sede Vivero",
+    "descripcion": "Sede de la Universidad Distrital Francisco José de Caldas",
+    "direccion": "Cra 5 #15-82, Bogotá",
+    "latitude": 4.597362864708261,
+    "longitude": -74.06460621077917
+  },
+  {
+    "id": 8,
+    "nombre": "Sede ASAB",
+    "descripcion": "Sede de la Universidad Distrital Francisco José de Caldas",
+    "direccion": "Cra 15 #15-2, Bogotá, Colombia",
+    "latitude": 4.6048557389443046,
+    "longitude": -74.07873154783844
+  },
+  {
+    "id": 9,
+    "nombre": "Sede Paiba",
+    "descripcion": "Sede de la Universidad Distrital Francisco José de Caldas",
+    "direccion": "Cl 13 #31-75, Bogotá, Colombia",
+    "latitude": 4.615281339898904,
+    "longitude": -74.09331682907303
+  }
+],
   "productos": [
     {
       "id": "4",
