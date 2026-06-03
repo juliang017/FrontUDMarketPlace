@@ -197,6 +197,9 @@ function renderizarProductos(productos) {
     const card = document.createElement("div");
     card.className = "card";
     card.dataset.id = producto.id;
+    card.addEventListener("click", () => {
+    verDetalleProducto(producto.id);
+});
     card.innerHTML = `
       <img
         src="${producto.imagen}"
@@ -266,6 +269,14 @@ window.editarPrecioDesdeIndex = async function(id) {
     console.error(err);
   }
 };
+window.verDetalleProducto = function(id) {
+
+    console.log("Producto seleccionado:", id);
+
+    window.location.href =
+    `detalleProducto.html?id=${id}`;
+
+}
 
 // =============================================
 // CERRAR SESIÓN
