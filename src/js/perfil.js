@@ -4,13 +4,14 @@ const campos = [
     "primerApellido",
     "segundoApellido",
     "fechaNacimiento",
-    "correo"
+    "correo",
+    "telefono"
 ];
 
 const API_USUARIOS = "http://localhost:3000/usuarios";
 const API_CALIFICACIONES = "http://localhost:3000/calificaciones";
 
-const usuarioActualId = "1";
+const usuarioActualId = localStorage.getItem("usuarioId");
 
 let usuarioActual = null;
 
@@ -72,6 +73,7 @@ async function cargarPerfil() {
 
         document.getElementById("v-correo").textContent =
             usuarioActual.correoInstitucional || usuarioActual.correo || "";
+        document.getElementById("v-telefono").textContent = usuarioActual.telefono || usuarioActual.telefono || "";
 
         // Inputs de edición
         document.getElementById("i-primerNombre").value =
@@ -91,6 +93,7 @@ async function cargarPerfil() {
 
         document.getElementById("i-correo").value =
             usuarioActual.correoInstitucional || usuarioActual.correo || "";
+        document.getElementById("i-telefono").value = usuarioActual.telefono || usuarioActual.telefono || "";
 
         // Panel lateral
         document.getElementById("nombreCompleto").textContent =
@@ -98,6 +101,7 @@ async function cargarPerfil() {
 
         document.getElementById("correoVisible").textContent =
             usuarioActual.correoInstitucional || usuarioActual.correo || "";
+        document.getElementById("")
 
         document.getElementById("avatarIniciales").textContent =
             (usuarioActual.primerNombre?.[0] || "") +

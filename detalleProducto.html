@@ -4,78 +4,62 @@
 <head>
     <meta charset="UTF-8">
     <title>Detalle Producto</title>
-
     <link rel="stylesheet" href="src/css/detalleProducto.css">
 </head>
 
 <body>
 
     <header>
-
         <div class="logo">
             UD Marketplace
         </div>
-
         <div id="accionesUsuario">
         </div>
-
     </header>
 
     <main class="detalle-container">
 
         <div class="detalle-imagen">
-
             <img id="imagenProducto" src="" alt="Producto">
-
         </div>
 
         <div class="detalle-info">
 
             <h1 id="nombreProducto"></h1>
-
             <h2 id="precioProducto"></h2>
-
             <p id="descripcionProducto"></p>
 
             <div class="datos-extra">
-
                 <p>
                     <strong>Ubicación:</strong>
                     <span id="ubicacionProducto"></span>
                 </p>
-
                 <p>
                     <strong>Categoría:</strong>
                     <span id="categoriaProducto"></span>
                 </p>
-
             </div>
 
             <div class="vendedor">
-
                 <h3>Información del vendedor</h3>
-
                 <p id="nombreVendedor"></p>
-
             </div>
 
             <div class="ubicacion">
-
                 <h3>Ubicación del vendedor</h3>
-
                 <div id="mapa">
-
                     <iframe id="mapaFrame" width="100%" height="350" style="border:0; border-radius:10px;"
                         loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"
                         src="https://www.google.com/maps?q=4.687,-74.043&z=15&output=embed">
                     </iframe>
-
                 </div>
-
             </div>
 
             <button id="btnComprar">
                 Comprar Producto
+            </button>
+            <button id="btnVolver" style="cursor: pointer; margin-left: 10px;">
+                ⬅ Regresar a Vender Productos
             </button>
 
         </div>

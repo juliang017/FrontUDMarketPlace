@@ -79,6 +79,17 @@ header{
   z-index: 0;      /* ← evita que el mapa se monte encima de otros elementos */
 }
 
+#btnVolver{
+    margin-top:30px;
+    width:100%;
+    background:#ef4444;
+    color:white;
+    padding:15px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+}
+
 #btnComprar{
     margin-top:30px;
     width:100%;
