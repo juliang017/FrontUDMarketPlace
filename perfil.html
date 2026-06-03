@@ -1,103 +1,104 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil</title>
-    <link rel="stylesheet" href="./src/css/perfil.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Perfil — UD Marketplace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./src/css/perfil.css">
 </head>
 <body>
-    <main>
-        <div class="nav-regreso">
-            <button onclick="window.history.back()">
-                ← Volver
-            </button>
+  <main>
+    <div class="nav-regreso">
+      <button onclick="window.history.back()">← Volver</button>
+    </div>
+
+    <div class="perfil-contenedor">
+
+      <aside class="perfil-izquierda">
+        <div class="avatar-wrapper">
+          <div class="avatar"><span id="avatarIniciales">--</span></div>
+          <div class="avatar-ring"></div>
         </div>
-        <div class="perfil-contenedor">
-    
-            <div class="perfil-izquierda">
-    
-                <div class="avatar">
-                    <span id="avatarIniciales">JD</span>
-                </div>
-    
-                <h2 id="nombreCompleto"></h2>
-                <p id="correoVisible"></p>
-    
-                <div class="calificacion">
-                    <span class="estrella">★</span>
-                    <span id="calificacionValor"></span>
-                    <span class="cal-label">/ 5.0</span>
-                </div>
-    
-                <div class="cal-barra-contenedor">
-                    <div class="cal-barra" id="calBarra" style="width: 96%"></div>
-                </div>
-        
-                <button id="btnEditar" onclick="activarEdicion()">
-                    ✏️ Editar perfil
-                </button>
-    
-                <button id="btnGuardar" onclick="guardarPerfil()" style="display:none;">
-                    💾 Guardar cambios
-                </button>
-    
-                <button id="btnCancelar" onclick="cancelarEdicion()" style="display:none;">
-                    Cancelar
-                </button>
-    
-            </div>
-    
-            <div class="perfil-derecha">
-    
-                <h3>Información personal</h3>
-    
-                <div class="campos-grid">
-    
-                    <div class="campo-grupo">
-                        <label>Primer nombre</label>
-                        <p class="campo-valor" id="v-primerNombre"></p>
-                        <input class="campo-input" id="i-primerNombre" type="text" style="display:none;">
-                    </div>
-    
-                    <div class="campo-grupo">
-                        <label>Segundo nombre</label>
-                        <p class="campo-valor" id="v-segundoNombre"></p>
-                        <input class="campo-input" id="i-segundoNombre" type="text" style="display:none;">
-                    </div>
-    
-                    <div class="campo-grupo">
-                        <label>Primer apellido</label>
-                        <p class="campo-valor" id="v-primerApellido"></p>
-                        <input class="campo-input" id="i-primerApellido" type="text" style="display:none;">
-                    </div>
-    
-                    <div class="campo-grupo">
-                        <label>Segundo apellido</label>
-                        <p class="campo-valor" id="v-segundoApellido"></p>
-                        <input class="campo-input" id="i-segundoApellido" type="text" style="display:none;">
-                    </div>
-    
-                    <div class="campo-grupo">
-                        <label>Fecha de nacimiento</label>
-                        <p class="campo-valor" id="v-fechaNacimiento"></p>
-                        <input class="campo-input" id="i-fechaNacimiento" type="date" style="display:none;">
-                    </div>
-    
-                    <div class="campo-grupo">
-                        <label>Correo electrónico</label>
-                        <p class="campo-valor" id="v-correo"></p>
-                        <input class="campo-input" id="i-correo" type="email" style="display:none;">
-                    </div>
-    
-                </div>
-    
-            </div>
-    
+
+        <h2 id="nombreCompleto">Cargando...</h2>
+        <p id="correoVisible"></p>
+
+        <div class="calificacion-bloque">
+          <div class="calificacion">
+            <span class="estrella">★</span>
+            <span id="calificacionValor">—</span>
+            <span class="cal-label">/ 5.0</span>
+          </div>
+          <div class="cal-barra-contenedor">
+            <div class="cal-barra" id="calBarra" style="width: 0%"></div>
+          </div>
+          <p class="cal-texto">Calificación del vendedor</p>
         </div>
-    
-    </main>
-    <script src="./src/js/perfil.js"></script>
+
+        <div class="botones-perfil">
+          <button id="btnEditar" onclick="activarEdicion()">✏️ Editar perfil</button>
+          <button id="btnGuardar" onclick="guardarPerfil()" style="display:none;">💾 Guardar cambios</button>
+          <button id="btnCancelar" onclick="cancelarEdicion()" style="display:none;">Cancelar</button>
+        </div>
+      </aside>
+
+      <section class="perfil-derecha">
+        <div class="seccion-header">
+          <h3>Información personal</h3>
+          <span id="estadoCarga" class="badge-cargando">Cargando...</span>
+        </div>
+
+        <div class="campos-grid">
+
+          <div class="campo-grupo">
+            <label>Primer nombre</label>
+            <p class="campo-valor" id="v-primerNombre"></p>
+            <input class="campo-input" id="i-primerNombre" type="text" style="display:none;">
+          </div>
+
+          <div class="campo-grupo">
+            <label>Segundo nombre</label>
+            <p class="campo-valor" id="v-segundoNombre"></p>
+            <input class="campo-input" id="i-segundoNombre" type="text" style="display:none;">
+          </div>
+
+          <div class="campo-grupo">
+            <label>Primer apellido</label>
+            <p class="campo-valor" id="v-primerApellido"></p>
+            <input class="campo-input" id="i-primerApellido" type="text" style="display:none;">
+          </div>
+
+          <div class="campo-grupo">
+            <label>Segundo apellido</label>
+            <p class="campo-valor" id="v-segundoApellido"></p>
+            <input class="campo-input" id="i-segundoApellido" type="text" style="display:none;">
+          </div>
+
+          <div class="campo-grupo">
+            <label>Fecha de nacimiento</label>
+            <p class="campo-valor" id="v-fechaNacimiento"></p>
+            <input class="campo-input" id="i-fechaNacimiento" type="date" style="display:none;">
+          </div>
+
+          <div class="campo-grupo">
+            <label>Teléfono</label>
+            <p class="campo-valor" id="v-telefono"></p>
+            <input class="campo-input" id="i-telefono" type="tel" style="display:none;">
+          </div>
+
+          <div class="campo-grupo campo-grupo--full">
+            <label>Correo institucional</label>
+            <p class="campo-valor" id="v-correo"></p>
+            <input class="campo-input" id="i-correo" type="email" style="display:none;" disabled title="El correo no puede modificarse">
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+  <script src="./src/js/perfil.js"></script>
 </body>
 </html>

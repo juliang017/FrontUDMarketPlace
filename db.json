@@ -9,7 +9,8 @@
       "fechaNacimiento": "2000-05-15",
       "correoInstitucional": "juan.perez@udistrital.edu.co",
       "telefono": "3001234567",
-      "contrasena": "juan123456"
+      "contrasena": "juan123456",
+      "calificacion": 4.5
     },
     {
       "id": "2",
@@ -20,7 +21,8 @@
       "fechaNacimiento": "1999-08-21",
       "correoInstitucional": "maria.rodriguez@udistrital.edu.co",
       "telefono": "3109876543",
-      "contrasena": "maria123"
+      "contrasena": "maria123",
+      "calificacion": 4.8
     },
     {
       "id": "3",
@@ -31,17 +33,21 @@
       "fechaNacimiento": "2001-02-10",
       "correoInstitucional": "andres.martinez@udistrital.edu.co",
       "telefono": "3204567890",
-      "contrasena": "andres123"
+      "contrasena": "andres123",
+      "calificacion": 3.9
     },
     {
       "primerNombre": "Camilo",
       "primerApellido": "Castro",
-      "fechaNacimiento": "2000-11-12",
+      "fechaNacimiento": "2001-11-11",
       "telefono": "3124529065",
       "correo": "cc@udistrital.edu.co",
       "contrasena": "123456789",
       "rol": "USUARIO",
-      "id": "7tVI_iQJTRM"
+      "id": "7tVI_iQJTRM",
+      "calificacion": 5,
+      "segundoNombre": "",
+      "segundoApellido": ""
     }
   ],
   "categorias": [
@@ -100,7 +106,8 @@
       "precio": 400000,
       "categoriaId": "4",
       "sedeId": "1",
-      "imagen": "https://picsum.photos/id/1060/400/300"
+      "imagen": "https://picsum.photos/id/1060/400/300",
+      "usuarioId": "1"
     },
     {
       "id": "5",
@@ -109,7 +116,8 @@
       "precio": 90000,
       "categoriaId": "5",
       "sedeId": "2",
-      "imagen": "https://picsum.photos/id/292/400/300"
+      "imagen": "https://picsum.photos/id/292/400/300",
+      "usuarioId": "2"
     },
     {
       "id": "7",
@@ -118,7 +126,8 @@
       "precio": 70000,
       "categoriaId": "2",
       "sedeId": "1",
-      "imagen": "https://picsum.photos/id/20/400/300"
+      "imagen": "https://picsum.photos/id/20/400/300",
+      "usuarioId": "3"
     },
     {
       "id": "8",
@@ -127,7 +136,38 @@
       "precio": 45000,
       "categoriaId": "5",
       "sedeId": "2",
-      "imagen": "https://picsum.photos/id/431/400/300"
+      "imagen": "https://picsum.photos/id/431/400/300",
+      "usuarioId": "1"
+    },
+    {
+      "id": "9",
+      "nombreProducto": "Audífonos Inalámbricos",
+      "descripcionProducto": "Audífonos con cancelación de ruido activa.",
+      "precio": 250000,
+      "categoriaId": "1",
+      "sedeId": "1",
+      "imagen": "https://picsum.photos/id/48/400/300",
+      "usuarioId": "7tVI_iQJTRM"
+    },
+    {
+      "id": "10",
+      "nombreProducto": "Chaqueta Impermeable",
+      "descripcionProducto": "Chaqueta rompevientos ideal para el clima de la ciudad.",
+      "precio": 120000,
+      "categoriaId": "3",
+      "sedeId": "3",
+      "imagen": "https://picsum.photos/id/641/400/300",
+      "usuarioId": "2"
+    },
+    {
+      "nombreProducto": "Tenis",
+      "descripcionProducto": "Tenis Adidas negros",
+      "precio": 200000,
+      "categoriaId": "3",
+      "sedeId": "1",
+      "imagen": "blob:http://localhost:3500/e91ca157-b3c5-4492-88fe-2649f7a5f590",
+      "usuarioId": "7tVI_iQJTRM",
+      "id": "of9VUPUqzTA"
     }
   ],
   "pqrs": [
@@ -140,6 +180,8 @@
       "estado": "Rechazado",
       "respuestaAdmin": "sapo"
     }
+  ],
+   "calificaciones": [
   ],
   "$schema": "./node_modules/json-server/schema.json"
 }

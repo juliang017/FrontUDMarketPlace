@@ -1,112 +1,194 @@
+let terminoBusqueda   = "";
+let todosLosProductos = [];
+let todasLasSedes     = [];
 
-const productos = [
+// =============================================
+// UTILIDAD JWT
+// =============================================
 
-    {
-        nombre:"Hamburguesa Artesanal",
+function parseJWT(token) {
+  try { return JSON.parse(atob(token.split(".")[1])); }
+  catch { return null; }
+}
 
-        descripcion:
-        "Hamburguesa con queso y papas.",
+function tokenEsValido(token) {
+  if (!token) return false;
+  const payload = parseJWT(token);
+  if (!payload) return false;
+  if (payload.exp && Date.now() / 1000 > payload.exp) {
+    localStorage.removeItem("jwt");
+    return false;
+  }
+  return true;
+}
 
-        precio:12000,
+// =============================================
+// PROTECCIÓN DE RUTA
+// =============================================
 
-        ubicacion:
-        "Facultad Tecnológica",
+const jwt = localStorage.getItem("jwt");
+if (!tokenEsValido(jwt)) window.location.href = "login.html";
 
-        imagen:
-        "img/hamburguesa.jpg"
-    },
+const usuarioId = parseJWT(jwt)?.sub || localStorage.getItem("usuarioId");
 
-    {
-        nombre:"Cuaderno",
+// =============================================
+// NAVEGACIÓN
+// =============================================
 
-        descripcion:
-        "Cuaderno universitario.",
+document.getElementById("btnComprarProductos").addEventListener("click", () => {
+  window.location.href = "index.html";
+});
+document.getElementById("btnPerfil").addEventListener("click", () => {
+  window.location.href = "perfil.html";
+});
+document.getElementById("btnAgregarProducto").addEventListener("click", () => {
+  window.location.href = "registroProducto.html";
+});
+document.getElementById("btnCerrarSesion").addEventListener("click", () => {
+  localStorage.clear();
+  window.location.href = "index.html";
+});
 
-        precio:5000,
+// =============================================
+// BÚSQUEDA POR NOMBRE
+// =============================================
 
-        ubicacion:
-        "Sede Ingeniería",
+const inputBusqueda = document.querySelector(".busqueda input");
 
-        imagen:
-        "img/cuaderno.jpg"
-    }
+inputBusqueda.addEventListener("input", () => {
+  terminoBusqueda = inputBusqueda.value.trim().toLowerCase();
+  aplicarFiltros();
+});
 
-];
+// =============================================
+// FILTRADO CENTRAL
+// =============================================
+
+function aplicarFiltros() {
+  const resultado = terminoBusqueda === ""
+    ? todosLosProductos
+    : todosLosProductos.filter(p =>
+        p.nombreProducto.toLowerCase().includes(terminoBusqueda)
+      );
+  renderizarProductos(resultado);
+}
+
+// =============================================
+// CARGA DE PRODUCTOS DEL USUARIO
+// =============================================
 
 const contenedor = document.getElementById("contenedorMisProductos");
 
-productos.forEach(producto => {
-    contenedor.innerHTML += `
+async function cargarMisProductos() {
+  try {
+    const [resProd, resSedes] = await Promise.all([
+      fetch(`http://localhost:3000/productos?usuarioId=${usuarioId}`),
+      fetch("http://localhost:3000/sedes"),
+    ]);
 
-    <div class="card">
+    if (!resProd.ok || !resSedes.ok) throw new Error("Error al obtener datos");
 
-        <img
-            src="${producto.imagen}"
-            alt="${producto.nombre}">
+    todosLosProductos = await resProd.json();
+    todasLasSedes     = await resSedes.json();
 
-        <div class="info">
+    aplicarFiltros();
 
-            <h3>
-                ${producto.nombre}
-            </h3>
-
-            <p>
-                ${producto.descripcion}
-            </p>
-
-            <h4>
-                $${producto.precio.toLocaleString()}
-            </h4>
-
-            <span>
-                📍 ${producto.ubicacion}
-            </span>
-
-            <div class="acciones">
-
-                <button onclick="editarProducto(${producto.id})" id="editarProducto">
-                    Editar
-                </button>
-
-                <button onclick="eliminarProducto(${producto.id}) id="eliminarProducto">
-                    Eliminar
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    `;
-});
-
-document.getElementById("btnAgregarProducto").addEventListener("click", () => {
-
-    window.location.href = "registroProducto.html";
-
-});
-
-document.getElementById("btnComprarProductos").addEventListener("click", () => {
-
-    window.location.href = "index.html";    
-
-})
-
-document.getElementById("btnPerfil").addEventListener("click", () => {
-
-    window.location.href = "perfil.html";    
-
-})
-
-function cerrarSesion(){
-
-    localStorage.removeItem("usuarioLogueado");
-
-    localStorage.removeItem("correoUsuario");
-
-    window.location.href = "index.html";
+  } catch (err) {
+    contenedor.innerHTML =
+      "<p class='error-carga'>No se pudieron cargar tus productos. Verifica que json-server esté activo.</p>";
+    console.error(err);
+  }
 }
 
-document.getElementById("btnCerrarSesion")
-    .addEventListener("click", cerrarSesion);
+// =============================================
+// RENDER
+// =============================================
+
+function renderizarProductos(productos) {
+  contenedor.innerHTML = "";
+
+  if (productos.length === 0) {
+    contenedor.innerHTML = terminoBusqueda !== ""
+      ? `<div class="estado-vacio"><p>No se encontraron productos con ese nombre.</p></div>`
+      : `<div class="estado-vacio">
+           <p>Aún no tienes productos publicados.</p>
+           <button onclick="window.location.href='registroProducto.html'">
+             + Publicar mi primer producto
+           </button>
+         </div>`;
+    return;
+  }
+
+  productos.forEach(producto => {
+    const sede = todasLasSedes.find(s => s.id === producto.sedeId);
+    const nombreSede = sede ? sede.nombre : "Sede no especificada";
+
+    const card = document.createElement("div");
+    card.className = "card";
+    card.dataset.id = producto.id;
+    card.innerHTML = `
+      <img
+        src="${producto.imagen}"
+        alt="${producto.nombreProducto}"
+        onerror="this.src='img/placeholder.jpg'">
+      <div class="info">
+        <h3>${producto.nombreProducto}</h3>
+        <p>${producto.descripcionProducto}</p>
+        <h4>$${producto.precio.toLocaleString("es-CO")}</h4>
+        <span class="sede">📍 ${nombreSede}</span>
+        <div class="acciones">
+          <button class="btn-editar" data-id="${producto.id}">Editar</button>
+          <button class="btn-eliminar" data-id="${producto.id}">Eliminar</button>
+        </div>
+      </div>
+    `;
+
+    card.querySelector(".btn-editar").addEventListener("click", () => {
+      editarProducto(producto.id);
+    });
+    card.querySelector(".btn-eliminar").addEventListener("click", () => {
+      eliminarProducto(producto.id, card);
+    });
+
+    contenedor.appendChild(card);
+  });
+}
+
+// =============================================
+// ACCIONES
+// =============================================
+
+function editarProducto(id) {
+  localStorage.setItem("productoEditarId", id);
+  window.location.href = "registroProducto.html";
+}
+
+async function eliminarProducto(id, cardElement) {
+  if (!confirm("¿Seguro que quieres eliminar este producto?")) return;
+
+  try {
+    const response = await fetch(`http://localhost:3000/productos/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) throw new Error("Error al eliminar");
+
+    cardElement.style.transition = "opacity 0.3s, transform 0.3s";
+    cardElement.style.opacity = "0";
+    cardElement.style.transform = "scale(0.95)";
+    setTimeout(() => {
+      cardElement.remove();
+      todosLosProductos = todosLosProductos.filter(p => p.id !== id);
+    }, 300);
+
+  } catch (err) {
+    alert("No se pudo eliminar el producto. Intenta de nuevo.");
+    console.error(err);
+  }
+}
+
+// =============================================
+// ARRANQUE
+// =============================================
+
+cargarMisProductos();

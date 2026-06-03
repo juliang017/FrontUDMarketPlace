@@ -1,206 +1,178 @@
-const formulario = document.getElementById("formRegistroProductos")
-const nombreProducto = document.getElementById("nombreProducto")
-    const descripcionProducto = document.getElementById("descripcion")
-    const ubicacion = document.getElementById("ubicacion")
-    const precio = document.getElementById("precio")
-    const imagen = document.getElementById("imagen")
-    const categoria = document.getElementById("categoria")
+// =============================================
+// UTILIDAD JWT
+// =============================================
 
-    document.getElementById("btnRegresar")
-    .addEventListener("click", () => {
-        window.location.href = "venderProductos.html";
-    });
+function parseJWT(token) {
+  try { return JSON.parse(atob(token.split(".")[1])); }
+  catch { return null; }
+}
 
-imagen.addEventListener("change", () => {
-    validarImagen(imagen);
+const jwt       = localStorage.getItem("jwt");
+const payload   = parseJWT(jwt);
+const usuarioId = payload?.sub || localStorage.getItem("usuarioId");
+
+if (!usuarioId) window.location.href = "login.html";
+
+// =============================================
+// REFERENCIAS AL DOM
+// =============================================
+
+const formulario          = document.getElementById("formRegistroProductos");
+const nombreProducto      = document.getElementById("nombreProducto");
+const descripcionProducto = document.getElementById("descripcion");
+const sedeSelect          = document.getElementById("sede");
+const precio              = document.getElementById("precio");
+const imagen              = document.getElementById("imagen");
+const categoriaSelect     = document.getElementById("categoria");
+
+document.getElementById("btnRegresar").addEventListener("click", () => {
+  window.location.href = "venderProductos.html";
 });
 
-function validarImagen(input){
+// =============================================
+// CARGA DE SELECTS DESDE JSON-SERVER
+// =============================================
 
-    console.log(input);
-    console.log(input.files);
+async function cargarSelects() {
+  try {
+    const [resCats, resSedes] = await Promise.all([
+      fetch("http://localhost:3000/categorias"),
+      fetch("http://localhost:3000/sedes"),
+    ]);
 
-    if(!input.files || input.files.length === 0){
+    if (!resCats.ok || !resSedes.ok) throw new Error("Error al cargar datos");
 
-        mostrarError(input, "Debe seleccionar una imagen");
-        return false;
-    }
+    const categorias = await resCats.json();
+    const sedes      = await resSedes.json();
 
-    const archivo = input.files[0];
+    categoriaSelect.innerHTML = `<option value="">Selecciona una categoría</option>`;
+    categorias.forEach(cat => {
+      categoriaSelect.innerHTML +=
+        `<option value="${cat.id}">${cat.nombre}</option>`;
+    });
 
-    // Validar tipo de archivo
-    if(!archivo.type.startsWith("image/")){
+    sedeSelect.innerHTML = `<option value="">Selecciona una sede</option>`;
+    sedes.forEach(sede => {
+      sedeSelect.innerHTML +=
+        `<option value="${sede.id}">${sede.nombre} — ${sede.descripcion}</option>`;
+    });
 
-        mostrarError(
-            input,
-            "El archivo debe ser una imagen"
-        );
-        alert("Debe seleccionar una imagen")
-
-        input.value = "";
-
-        return false;
-    }
-
-    limpiarError(input);
-
-        return true;
+  } catch (err) {
+    console.error("Error cargando selects:", err);
+  }
 }
 
-    precio.addEventListener("input" , () => {
-        precio.value = precio.value.replace(/[^0-9]/g, '');
-        
-    })
+cargarSelects();
 
-    function validarCampo(input){
-        
-        if(input.value.trim() === "" ){
-            mostrarError(
-                input,
-                "Este campo es obligatorio"
-            );
-            return false;
-            } else {
-                limpiarError(input)
-                return true
-            }
+// =============================================
+// VALIDACIONES EN TIEMPO REAL
+// =============================================
 
-    }
+precio.addEventListener("input", () => {
+  precio.value = precio.value.replace(/[^0-9]/g, "");
+});
 
-    nombreProducto.addEventListener("blur", () => {
-        validarCampo(nombreProducto)
-    })
+imagen.addEventListener("change", () => validarImagen(imagen));
 
-    descripcionProducto.addEventListener("blur", () => {
-        validarCampo(descripcionProducto)
-    })
-    ubicacion.addEventListener("blur", () => {
-        validarCampo(ubicacion)
-    })
-    precio.addEventListener("blur", () => {
-        validarCampo(precio)    
-    })
+[nombreProducto, descripcionProducto, precio].forEach(campo => {
+  campo.addEventListener("blur", () => validarCampo(campo));
+});
 
-    const categorias = [
+[categoriaSelect, sedeSelect].forEach(select => {
+  select.addEventListener("change", () => validarCampo(select));
+});
 
-        {
-            id: 1,
-            nombre: "Tecnologia",
-        },
-        {
-            id: 2,
-            nombre: "Comida",
-        }
-    ];
+// =============================================
+// SUBMIT — POST A JSON-SERVER
+// =============================================
 
-    async function cargarCategorias() {
+document.getElementById("btnRegistrar").addEventListener("click", async (event) => {
+  event.preventDefault();
 
-        try {
-    
-            /*const response = await fetch("http://localhost:3000/categorias");
-            const categorias = await response.json();*/
-    
-            const select = document.getElementById("categoria");
-    
-            // Opción por defecto
-            select.innerHTML = `<option value="">Selecciona una categoría</option>`;
-    
-            categorias.forEach(categoria => {
-                select.innerHTML += `
-                    <option value="${categoria.id}">
-                        ${categoria.nombre}
-                    </option>
-                `;
-            });
-    
-        } catch (error) {
-            console.error(error);
-        }
-    }
-    
-    cargarCategorias();
+  let valido = true;
+  if (!validarCampo(nombreProducto))      valido = false;
+  if (!validarCampo(descripcionProducto)) valido = false;
+  if (!validarCampo(precio))              valido = false;
+  if (!validarCampo(sedeSelect))          valido = false;
+  if (!validarCampo(categoriaSelect))     valido = false;
+  if (!validarImagen(imagen))             valido = false;
 
-document.getElementById("btnRegistrar").addEventListener("click", async(event) => {
-    event.preventDefault();
-    let valido = true;
+  if (!valido) return;
 
-    console.log("nombreProducto:", nombreProducto.value);
-    console.log("precio:", precio.value);
-    console.log("descripcion:", descripcionProducto.value);
-    console.log("ubicacion:", ubicacion.value);
-    console.log("imagen files:", imagen.files);
+  const btnRegistrar = document.getElementById("btnRegistrar");
+  btnRegistrar.disabled = true;
+  btnRegistrar.textContent = "Registrando...";
 
-    if(!validarCampo(nombreProducto)) valido = false;
-    if(!validarCampo(precio)) valido = false;
-    if(!validarCampo(descripcionProducto)) valido = false;
-    if(!validarCampo(ubicacion)) valido = false;
-    if(!validarImagen(imagen)) valido = false;
-    if(!validarCampo(categoria)) valido = false;
+  try {
+    // json-server no sirve imágenes binarias — se usa la URL de picsum como placeholder
+    // En producción reemplaza esto por la URL devuelta por tu backend de almacenamiento
+    const imagenUrl = imagen.files[0]
+      ? URL.createObjectURL(imagen.files[0])
+      : "https://picsum.photos/400/300";
 
-    console.log("valido final:", valido);
+    const nuevoProducto = {
+      nombreProducto:      nombreProducto.value.trim(),
+      descripcionProducto: descripcionProducto.value.trim(),
+      precio:              parseInt(precio.value, 10),
+      categoriaId:         categoriaSelect.value,
+      sedeId:              sedeSelect.value,
+      imagen:              imagenUrl,
+      usuarioId:           usuarioId,
+    };
 
-    if(!valido) return alert("Debe completar los campos correctamente");
+    const response = await fetch("http://localhost:3000/productos", {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify(nuevoProducto),
+    });
 
-    try{
+    if (!response.ok) throw new Error("Error al registrar el producto");
 
-        alert("Formulario enviado")
-       /* const formData = new FormData();
+    alert("¡Producto publicado correctamente!");
+    window.location.href = "venderProductos.html";
 
-        formData.append("nombre", nombreProducto.value);
-        formData.append("precio", precio.value);
-        formData.append("descripcion", descripcionProducto.value);
-        formData.append("ubiacion", ubicacion.value)
-        formData.append("imagen", imagen.files[0]);
+  } catch (err) {
+    alert("No se pudo conectar con el servidor. Verifica que json-server esté activo.");
+    console.error(err);
+  } finally {
+    btnRegistrar.disabled = false;
+    btnRegistrar.textContent = "Completar Registro →";
+  }
+});
 
-        const response = await fetch(
-            "http://localhost:3000/productos",
-            {
-                method: "POST",
-                body: formData
-            }
-        );
+// =============================================
+// FUNCIONES AUXILIARES
+// =============================================
 
-        const data = await response.json();
-
-        console.log(data);
-        console.log(formData);*/
-        limpiarCampos(nombreProducto);
-        limpiarCampos(descripcionProducto);
-        limpiarCampos(precio);
-        limpiarCampos(ubicacion);
-        limpiarCampos(imagen);
-    }catch(error){
-
-        console.error(error);
-
-    }
-
-})
-
-function mostrarError(input, mensaje){
-
-    input.parentElement
-         .querySelector(".error")
-         .textContent = mensaje;
+function validarCampo(input) {
+  const valor = input.value.trim();
+  if (valor === "") {
+    mostrarError(input, "Este campo es obligatorio");
+    return false;
+  }
+  limpiarError(input);
+  return true;
 }
 
-function limpiarErrores(){
+function validarImagen(input) {
+  if (!input.files || input.files.length === 0) {
+    mostrarError(input, "Debe seleccionar una imagen");
+    return false;
+  }
+  if (!input.files[0].type.startsWith("image/")) {
+    mostrarError(input, "El archivo debe ser una imagen");
+    input.value = "";
+    return false;
+  }
+  limpiarError(input);
+  return true;
+}
 
-    document
-        .querySelectorAll(".error")
-        .forEach(error => {
-            error.textContent = "";
-        });
-
+function mostrarError(input, mensaje) {
+  input.parentElement.querySelector(".error").textContent = mensaje;
 }
 
 function limpiarError(input) {
-    const error = input.nextElementSibling;
-    error.textContent = "";
-}
-
-function limpiarCampos(input){
-
-    input.value = input.value.replace(input.value,"");
-
+  const err = input.parentElement.querySelector(".error");
+  if (err) err.textContent = "";
 }

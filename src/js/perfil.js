@@ -1,102 +1,232 @@
 const campos = [
-    "primerNombre", "segundoNombre",
-    "primerApellido", "segundoApellido",
-    "fechaNacimiento", "correo"
+    "primerNombre",
+    "segundoNombre",
+    "primerApellido",
+    "segundoApellido",
+    "fechaNacimiento",
+    "correo"
 ];
 
-const usuarios = [
+const API_USUARIOS = "http://localhost:3000/usuarios";
+const API_CALIFICACIONES = "http://localhost:3000/calificaciones";
 
-    {
-        primerNombre:"Juan",
-        segundoNombre: "Carlos",
-        primerApellido: "Torres",
-        segundoApellido: "Rios",
-        fechaNacimiento: "15/03/2000",
-        calificacion: 4.8,
-        correo: "jctorresr@udistrital.edu.co"
-    }
-];
+const usuarioActualId = "1";
+
+let usuarioActual = null;
 
 async function cargarPerfil() {
 
     try {
 
-        /*const response = await fetch("http://localhost:3000/usuarios/perfil");
-        const usuario = await response.json();*/
+        // Obtener usuario
+        const respuestaUsuario =
+            await fetch(`${API_USUARIOS}/${usuarioActualId}`);
 
-        // Actualiza los textos visibles
-        usuarios.forEach(usuario => {
-        document.getElementById("v-primerNombre").textContent = usuario.primerNombre;
-        document.getElementById("v-segundoNombre").textContent = usuario.segundoNombre;
-        document.getElementById("v-primerApellido").textContent = usuario.primerApellido;
-        document.getElementById("v-segundoApellido").textContent = usuario.segundoApellido;
-        document.getElementById("v-fechaNacimiento").textContent = usuario.fechaNacimiento;
-        document.getElementById("v-correo").textContent = usuario.correo;
+        if (!respuestaUsuario.ok) {
+            throw new Error("No se pudo cargar el usuario");
+        }
 
-        // Actualiza los inputs para cuando el usuario edite
-        document.getElementById("i-primerNombre").value = usuario.primerNombre;
-        document.getElementById("i-segundoNombre").value = usuario.segundoNombre;
-        document.getElementById("i-primerApellido").value = usuario.primerApellido;
-        document.getElementById("i-segundoApellido").value = usuario.segundoApellido;
-        document.getElementById("i-fechaNacimiento").value = usuario.fechaNacimiento;
-        document.getElementById("i-correo").value = usuario.correo;
+        usuarioActual =
+            await respuestaUsuario.json();
 
-        // Actualiza la info del panel izquierdo
+        // Obtener calificaciones
+        const respuestaCalificaciones =
+            await fetch(API_CALIFICACIONES);
+
+        if (!respuestaCalificaciones.ok) {
+            throw new Error("No se pudieron cargar las calificaciones");
+        }
+
+        const calificaciones =
+            await respuestaCalificaciones.json();
+
+        // Calcular promedio del vendedor
+        const calificacionesUsuario =
+            calificaciones.filter(
+                c => c.vendedorId === usuarioActualId
+            );
+
+        const promedio =
+            calificacionesUsuario.length > 0
+                ? calificacionesUsuario.reduce(
+                    (suma, c) => suma + Number(c.puntuacion),
+                    0
+                ) / calificacionesUsuario.length
+                : 0;
+
+        // Información personal
+        document.getElementById("v-primerNombre").textContent =
+            usuarioActual.primerNombre || "";
+
+        document.getElementById("v-segundoNombre").textContent =
+            usuarioActual.segundoNombre || "";
+
+        document.getElementById("v-primerApellido").textContent =
+            usuarioActual.primerApellido || "";
+
+        document.getElementById("v-segundoApellido").textContent =
+            usuarioActual.segundoApellido || "";
+
+        document.getElementById("v-fechaNacimiento").textContent =
+            usuarioActual.fechaNacimiento || "";
+
+        document.getElementById("v-correo").textContent =
+            usuarioActual.correoInstitucional || usuarioActual.correo || "";
+
+        // Inputs de edición
+        document.getElementById("i-primerNombre").value =
+            usuarioActual.primerNombre || "";
+
+        document.getElementById("i-segundoNombre").value =
+            usuarioActual.segundoNombre || "";
+
+        document.getElementById("i-primerApellido").value =
+            usuarioActual.primerApellido || "";
+
+        document.getElementById("i-segundoApellido").value =
+            usuarioActual.segundoApellido || "";
+
+        document.getElementById("i-fechaNacimiento").value =
+            usuarioActual.fechaNacimiento || "";
+
+        document.getElementById("i-correo").value =
+            usuarioActual.correoInstitucional || usuarioActual.correo || "";
+
+        // Panel lateral
         document.getElementById("nombreCompleto").textContent =
-            `${usuario.primerNombre} ${usuario.primerApellido}`;
-        document.getElementById("correoVisible").textContent = usuario.correo;
-        document.getElementById("avatarIniciales").textContent =
-            (usuario.primerNombre[0] || "") + (usuario.primerApellido[0] || "");
+            `${usuarioActual.primerNombre || ""} ${usuarioActual.primerApellido || ""}`;
 
-        // Calificación si viene del backend
-        document.getElementById("calificacionValor").textContent = usuario.calificacion;
+        document.getElementById("correoVisible").textContent =
+            usuarioActual.correoInstitucional || usuarioActual.correo || "";
+
+        document.getElementById("avatarIniciales").textContent =
+            (usuarioActual.primerNombre?.[0] || "") +
+            (usuarioActual.primerApellido?.[0] || "");
+
+        // Calificación
+        document.getElementById("calificacionValor").textContent =
+            promedio.toFixed(1);
+
         document.getElementById("calBarra").style.width =
-            (usuario.calificacion / 5 * 100) + "%";
-        })
+            `${(promedio / 5) * 100}%`;
+
     } catch (error) {
-        console.error(error);
+
+        console.error("Error cargando perfil:", error);
+
+        alert("No fue posible cargar la información del perfil.");
     }
 }
 
 cargarPerfil();
 
 function activarEdicion() {
+
     campos.forEach(c => {
+
         document.getElementById(`v-${c}`).style.display = "none";
         document.getElementById(`i-${c}`).style.display = "block";
     });
+
     document.getElementById("btnEditar").style.display = "none";
     document.getElementById("btnGuardar").style.display = "block";
     document.getElementById("btnCancelar").style.display = "block";
 }
 
 function cancelarEdicion() {
+
     campos.forEach(c => {
+
         document.getElementById(`v-${c}`).style.display = "block";
         document.getElementById(`i-${c}`).style.display = "none";
     });
+
     document.getElementById("btnEditar").style.display = "block";
     document.getElementById("btnGuardar").style.display = "none";
     document.getElementById("btnCancelar").style.display = "none";
 }
 
-function guardarPerfil() {
-    const primerNombre = document.getElementById("i-primerNombre").value;
-    const primerApellido = document.getElementById("i-primerApellido").value;
-    const correo = document.getElementById("i-correo").value;
+async function guardarPerfil() {
 
-    // Actualiza los textos visibles
-    campos.forEach(c => {
-        const valor = document.getElementById(`i-${c}`).value;
-        document.getElementById(`v-${c}`).textContent = valor;
-    });
+    try {
 
-    // Actualiza avatar e info lateral
-    document.getElementById("avatarIniciales").textContent =
-        (primerNombre[0] || "") + (primerApellido[0] || "");
-    document.getElementById("nombreCompleto").textContent =
-        primerNombre + " " + primerApellido;
-    document.getElementById("correoVisible").textContent = correo;
+        const datosActualizados = {
 
-    cancelarEdicion();
+            ...usuarioActual,
+
+            primerNombre:
+                document.getElementById("i-primerNombre").value,
+
+            segundoNombre:
+                document.getElementById("i-segundoNombre").value,
+
+            primerApellido:
+                document.getElementById("i-primerApellido").value,
+
+            segundoApellido:
+                document.getElementById("i-segundoApellido").value,
+
+            fechaNacimiento:
+                document.getElementById("i-fechaNacimiento").value,
+
+            correoInstitucional:
+                document.getElementById("i-correo").value
+        };
+
+        const respuesta = await fetch(
+            `${API_USUARIOS}/${usuarioActualId}`,
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(datosActualizados)
+            }
+        );
+
+        if (!respuesta.ok) {
+            throw new Error("No se pudo actualizar el perfil");
+        }
+
+        usuarioActual = datosActualizados;
+
+        // Actualizar vista
+        document.getElementById("v-primerNombre").textContent =
+            datosActualizados.primerNombre;
+
+        document.getElementById("v-segundoNombre").textContent =
+            datosActualizados.segundoNombre;
+
+        document.getElementById("v-primerApellido").textContent =
+            datosActualizados.primerApellido;
+
+        document.getElementById("v-segundoApellido").textContent =
+            datosActualizados.segundoApellido;
+
+        document.getElementById("v-fechaNacimiento").textContent =
+            datosActualizados.fechaNacimiento;
+
+        document.getElementById("v-correo").textContent =
+            datosActualizados.correoInstitucional;
+
+        document.getElementById("nombreCompleto").textContent =
+            `${datosActualizados.primerNombre} ${datosActualizados.primerApellido}`;
+
+        document.getElementById("correoVisible").textContent =
+            datosActualizados.correoInstitucional;
+
+        document.getElementById("avatarIniciales").textContent =
+            (datosActualizados.primerNombre[0] || "") +
+            (datosActualizados.primerApellido[0] || "");
+
+        cancelarEdicion();
+
+        alert("Perfil actualizado correctamente");
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("No fue posible actualizar el perfil");
+    }
 }

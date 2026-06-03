@@ -1,0 +1,240 @@
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  background: linear-gradient(135deg, #FFD54F, #FF9800, #FF5722, #D32F2F);
+  background-size: 400% 400%;
+  animation: fondo 12s ease infinite;
+}
+
+@keyframes fondo {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.contenedor {
+  width: 1200px;
+  max-width: 100%;
+  display: flex;
+  overflow: hidden;
+  border-radius: 25px;
+  background: white;
+  box-shadow: 0 20px 60px rgba(0,0,0,.25);
+  animation: entrada .8s ease;
+}
+
+@keyframes entrada {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Panel izquierdo ── */
+.panel-izquierdo {
+  width: 42%;
+  background: linear-gradient(180deg, #FFF8E1, #FFE0B2);
+  padding: 50px 40px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #FF5722;
+}
+
+.imagen {
+  width: 260px;
+  margin: 20px 0;
+  animation: flotar 4s ease-in-out infinite;
+}
+
+@keyframes flotar {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-15px); }
+}
+
+.panel-izquierdo h2 {
+  font-size: 30px;
+  color: #333;
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.panel-izquierdo p {
+  color: #555;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+/* ── Panel derecho ── */
+.panel-derecho {
+  width: 58%;
+  padding: 48px 44px;
+  overflow-y: auto;
+}
+
+.panel-derecho h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+/* ── Grid del formulario ── */
+.fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 0; /* el margen lo pone .grupo */
+}
+
+/* Fila sede + precio: sede más ancha */
+.fila-sede {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+.grupo {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+/* Campo que ocupa toda la fila */
+.grupo-full {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+/* ── Etiquetas ── */
+label {
+  margin-bottom: 7px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #334155;
+}
+
+/* ── Inputs y textareas ── */
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 13px 15px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 14px;
+  color: #1e293b;
+  background: #f8fafc;
+  transition: border-color .25s, box-shadow .25s, background .25s;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 90px;
+  line-height: 1.5;
+}
+
+/* Select — flecha personalizada */
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394a3b8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 38px;
+  cursor: pointer;
+}
+
+input[type="file"] {
+  padding: 10px 12px;
+  cursor: pointer;
+  background: #f8fafc;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #2563eb;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.18);
+}
+
+/* ── Botones ── */
+.btn-primario {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #FF9800, #FF5722, #F44336);
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: transform .2s, box-shadow .2s;
+}
+
+.btn-primario:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(244,67,54,.35);
+}
+
+.btn-secundario {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: transparent;
+  color: #64748b;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color .2s, color .2s;
+}
+
+.btn-secundario:hover {
+  border-color: #FF5722;
+  color: #FF5722;
+}
+
+/* ── Validación ── */
+.error {
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 5px;
+  min-height: 16px;
+}
+
+.valido   { border-color: #22c55e !important; }
+.invalido { border-color: #ef4444 !important; }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .contenedor      { flex-direction: column; }
+  .panel-izquierdo,
+  .panel-derecho   { width: 100%; }
+  .panel-derecho   { padding: 32px 24px; }
+  .fila,
+  .fila-sede       { grid-template-columns: 1fr; }
+  .imagen          { width: 180px; }
+}
