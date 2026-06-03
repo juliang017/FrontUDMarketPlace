@@ -4,9 +4,11 @@ Marketplace web desarrollado para la comunidad de la Universidad Distrital Franc
 
 ## Integrantes
 
-* Tomás Arévalo Montes
-* Pablo Garzón Gómez
-* Juan Sebastián Vásquez Ortiz
+* Luis Rojas Rada #20222020242,
+* Tomas Arévalo Montes #20232020267,
+* Juan Diego Ávila Tafur #20221020132,
+* Kevin Julian Neisa Gonzalez #20222020224,
+* Julian Camilo Gómez Nieto #20222020215
 
 ## Descripción del Proyecto
 
